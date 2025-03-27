@@ -2,7 +2,7 @@
 title: "OpenCore Sin Inyección ACPI - Guía Completa"
 date: 2025-03-27
 description: "Guía sobre cómo usar OpenCore sin inyección ACPI para evitar conflictos con Windows"
-image: "https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/opencore-no-acpi.jpg"
+image: ""
 category: "Hackintosh"
 categories: ["OpenCore", "ACPI", "Hackintosh"]
 ---
