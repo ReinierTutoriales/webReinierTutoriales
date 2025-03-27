@@ -7,8 +7,6 @@ author: ReinierTutoriales
 permalink: /broadcom-macos-15-guia-completa/
 ---
 
-# 🚀 Soporte para Broadcom WiFi y Bluetooth en macOS 15 Sequoia
-
 ¡Bienvenido al repositorio oficial de **ReinierTutoriales**! Esta guía te llevará paso a paso para habilitar soporte completo de tarjetas **Broadcom** (WiFi y Bluetooth) en **macOS 15 Sequoia**, ideal para usuarios de Hackintosh.  
 
 > **Créditos:** Todo esto es posible gracias al increíble trabajo de [👉 **OpenCore Legacy Patcher**](https://github.com/dortania/OpenCore-Legacy-Patcher/).
