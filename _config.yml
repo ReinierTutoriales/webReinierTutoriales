@@ -1,5 +1,9 @@
+# _config.yml
 title: ReinierTutoriales
-description: Blog de tecnología y tutoriales
-baseurl: "/webReinierTutoriales"  # https://github.com/ReinierTutoriales
-url: "https://reinierTutoriales.github.io"
+baseurl: "/webReinierTutoriales"  # Nombre de tu repositorio
+url: "https://reiniertutoriales.github.io"
 theme: minima
+permalink: /:categories/:title/
+collections:
+  posts:
+    output: true

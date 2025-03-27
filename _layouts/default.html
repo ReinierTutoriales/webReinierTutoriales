@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} | {{ site.title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* [Pega aquí todo tu CSS existente] */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">{{ site.title }}</div>
+            <button class="menu-toggle" aria-label="Menú">☰</button>
+            <nav>
+                <ul>
+                    <li><a href="{{ site.baseurl }}/">Inicio</a></li>
+                    <li><a href="{{ site.baseurl }}/hardware">Hardware</a></li>
+                    <li><a href="{{ site.baseurl }}/guias">Guías</a></li>
+                </ul>
+            </nav>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        {{ content }}
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> {{ site.title }}. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // [Pega aquí tu JavaScript existente]
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

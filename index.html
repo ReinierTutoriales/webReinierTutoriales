@@ -1,12 +1,27 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReinierTutoriales | Tecnología y Desarrollo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>ReinierTutoriales | Tutoriales de Tecnología y Desarrollo</title>
+    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo con guías paso a paso">
+    <meta name="keywords" content="Hackintosh, macOS, Broadcom, OpenCore, WiFi, Bluetooth, tutoriales tecnología">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="ReinierTutoriales | Tutoriales Profesionales">
+    <meta property="og:description" content="Aprende con tutoriales técnicos sobre Hackintosh y desarrollo de software">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reiniertutoriales.github.io/webReinierTutoriales/">
+    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/assets/img/og-preview.jpg">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <!-- Preload de fuentes -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"></noscript>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -15,9 +30,11 @@
             --text: #1a1a1a;
             --card-bg: #f8fafc;
             --border: #e2e8f0;
-            --text-soft: #4b5563;
+            --text-soft: #64748b;
             --switch-bg: #e2e8f0;
             --switch-circle: #ffffff;
+            --code-bg: #f3f4f6;
+            --code-border: #e5e7eb;
         }
 
         [data-theme="dark"] {
@@ -30,25 +47,29 @@
             --text-soft: #94a3b8;
             --switch-bg: #475569;
             --switch-circle: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-border: #334155;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background 0.3s ease, color 0.2s ease, border-color 0.3s ease;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Header */
         header {
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             padding: 1rem;
             position: sticky;
@@ -61,41 +82,73 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 1.5rem;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
+        /* Barra de búsqueda optimizada */
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            margin-left: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
+            font: inherit;
+            transition: all 0.3s ease;
         }
 
-        nav ul {
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            pointer-events: none;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Menú de navegación - Escritorio */
+        .desktop-menu {
             display: flex;
             list-style: none;
             gap: 1.5rem;
         }
 
-        nav ul li a {
+        .desktop-menu li a {
             color: white;
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.95rem;
             padding: 0.5rem 0;
             position: relative;
         }
 
-        nav ul li a::after {
+        .desktop-menu li a::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -103,19 +156,75 @@
             width: 0;
             height: 2px;
             background: white;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
 
-        nav ul li a:hover::after {
+        .desktop-menu li a:hover::after {
             width: 100%;
+        }
+
+        /* Menú móvil - Oculto por defecto */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: var(--primary-dark);
+            list-style: none;
+            padding: 1rem;
+            z-index: 999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.show {
+            display: block;
+        }
+
+        .mobile-menu li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+        }
+
+        /* Botón menú móvil - Oculto por defecto */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: auto;
+        }
+
+        .menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Selector de tema optimizado */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 1rem;
         }
 
         .theme-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 30px;
-            margin-left: 1rem;
+            width: 50px;
+            height: 24px;
         }
 
         .theme-switch input {
@@ -132,15 +241,15 @@
             right: 0;
             bottom: 0;
             background-color: var(--switch-bg);
-            border-radius: 34px;
+            border-radius: 24px;
             transition: .4s;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 22px;
-            width: 22px;
+            height: 16px;
+            width: 16px;
             left: 4px;
             bottom: 4px;
             background-color: var(--switch-circle);
@@ -153,28 +262,37 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(30px);
+            transform: translateX(26px);
         }
 
+        /* Contenido principal */
         .container {
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+            overflow-x: hidden;
         }
 
-        /* Vista de lista de artículos */
+        /* Artículos - Lista */
         .article-list {
             display: block;
+            width: 100%;
         }
 
         .article-preview {
-            background: var(--card-bg);
+            display: flex;
+            gap: 1.5rem;
+            background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             border: 1px solid var(--border);
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            overflow: hidden;
         }
 
         .article-preview:hover {
@@ -182,141 +300,327 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .article-image-container {
+            flex: 0 0 200px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .article-preview:hover .article-image {
+            transform: scale(1.05);
+        }
+
+        .article-text {
+            flex: 1;
+            min-width: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
         .meta {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
             color: var(--text-soft);
-            font-family: 'Roboto Mono', monospace;
+            flex-wrap: wrap;
         }
 
         .tag {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
             margin-right: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        /* Vista de artículo completo */
+        /* Artículo completo */
         .article-full {
             display: none;
-            background: var(--card-bg);
+            background-color: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
+            width: 100%;
+            overflow: hidden;
         }
 
-        .back-button {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--primary);
+        /* Imagen destacada del artículo */
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 2rem;
+            display: block;
+            border: 1px solid var(--border);
+        }
+
+        /* Botones de compartir */
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
             color: white;
-            border-radius: 4px;
             text-decoration: none;
-            margin-bottom: 1.5rem;
             font-weight: 500;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9rem;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            min-width: 44px;
+            height: 44px;
         }
 
-        .back-button:hover {
-            background: var(--primary-dark);
+        .share-button .text {
+            display: none;
         }
 
-        .article-content img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 1rem 0;
+        .share-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
-        
-        .article-content ul, 
-        .article-content ol {
-            margin: 1rem 0;
-            padding-left: 2rem;
+
+        .share-button.twitter {
+            background-color: #1DA1F2;
         }
-        
-        .article-content li {
-            margin-bottom: 0.5rem;
+
+        .share-button.facebook {
+            background-color: #4267B2;
         }
-        
-        .article-content h3 {
-            font-size: 1.5rem;
-            margin: 1.5rem 0 1rem;
-            color: var(--text);
+
+        .share-button.linkedin {
+            background-color: #0077B5;
         }
-        
-        .article-content pre {
-            background: var(--bg);
+
+        .share-button.whatsapp {
+            background-color: #25D366;
+        }
+
+        .share-button.telegram {
+            background-color: #0088CC;
+        }
+
+        .share-button i {
+            font-size: 1.25rem;
+        }
+
+        /* Bloques de código con botón de copiar */
+        .code-block-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .code-block {
+            position: relative;
+            background-color: var(--code-bg);
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
-            margin: 1.5rem 0;
-            border: 1px solid var(--border);
-        }
-        
-        .article-content code {
+            border: 1px solid var(--code-border);
             font-family: 'Roboto Mono', monospace;
             font-size: 0.9rem;
         }
-        
-        .article-content blockquote {
-            border-left: 3px solid var(--primary);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            color: var(--text-soft);
-            font-style: italic;
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
+        .code-block-wrapper:hover .copy-button {
+            opacity: 1;
+        }
+
+        .copy-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .copy-button.copied {
+            background-color: #10b981;
+        }
+
+        .copy-button i {
+            font-size: 0.8rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .markdown-content {
+            line-height: 1.7;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4 {
+            margin: 1.5rem 0 1rem;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+            word-break: break-word;
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+
+        /* Footer */
         footer {
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             text-align: center;
             padding: 2rem;
             margin-top: 3rem;
-            font-size: 0.9rem;
         }
 
+        /* Transiciones para modo oscuro/claro */
+        body,
+        .slider,
+        .slider:before {
+            transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            width: 100%;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .desktop-menu {
+                display: none;
+            }
+            
             .menu-toggle {
                 display: block;
+                order: 1;
             }
-
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: var(--primary-dark);
+            
+            .search-container {
+                order: 2;
+                min-width: 100%;
+                margin: 0.5rem 0 0;
+            }
+            
+            .theme-switch-wrapper {
+                margin-left: auto;
+            }
+            
+            .article-preview {
                 flex-direction: column;
-                padding: 1rem;
-                gap: 0;
+            }
+            
+            .article-image-container {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
             }
 
-            nav ul.show {
-                display: flex;
+            .article-text {
+                width: 100%;
             }
 
-            nav ul li {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            .featured-image {
+                max-height: 250px;
             }
+        }
 
-            .container {
-                padding: 0 1rem;
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
             }
-
-            .article-preview, .article-full {
-                padding: 1.5rem;
+            
+            .share-button {
+                padding: 0.75rem 1.25rem;
+                min-width: auto;
+            }
+            
+            .share-button .text {
+                display: inline;
             }
         }
     </style>
@@ -325,42 +629,64 @@
     <header>
         <div class="nav-container">
             <div class="logo">ReinierTutoriales</div>
-            <button class="menu-toggle" aria-label="Menú">☰</button>
+            
+            <!-- Barra de búsqueda -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput" aria-label="Buscar tutoriales">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            
+            <!-- Menú de escritorio -->
             <nav>
-                <ul>
+                <ul class="desktop-menu">
                     <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
                     <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
                     <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
                 </ul>
             </nav>
+            
+            <!-- Selector de tema -->
             <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider round"></div>
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggle" aria-label="Cambiar tema">
+                    <span class="slider"></span>
                 </label>
             </div>
+            
+            <!-- Botón menú móvil -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18"></path>
+                </svg>
+            </button>
         </div>
+        
+        <!-- Menú móvil (fuera del nav para mejor posicionamiento) -->
+        <ul class="mobile-menu" id="mobileMenu">
+            <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+            <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
+            <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
+        </ul>
     </header>
 
     <main class="container">
         <!-- Vista de lista de artículos -->
         <div id="article-list" class="article-list">
-            <article class="article-preview" data-article="broadcom">
-                <div class="meta">
-                    <span>27 Marzo 2025</span>
-                    <span>·</span>
-                    <span>10 min lectura</span>
-                </div>
-                <span class="tag">macOS</span>
-                <span class="tag">Hackintosh</span>
-                <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
-                <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
-            </article>
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+            </div>
         </div>
 
         <!-- Vista de artículo completo -->
         <div id="article-full" class="article-full">
-            <button class="back-button">← Volver a los artículos</button>
+            <button class="back-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                <span>Volver a los artículos</span>
+            </button>
             <div id="article-content" class="article-content"></div>
         </div>
     </main>
@@ -369,144 +695,399 @@
         <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Plantilla para el artículo Broadcom -->
-    <template id="broadcom-template">
-        <div class="meta">
-            <span>27 Marzo 2025</span>
-            <span>·</span>
-            <span>10 min lectura</span>
-        </div>
-        <span class="tag">macOS</span>
-        <span class="tag">Hackintosh</span>
-        <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
-        
-        <div class="article-content">
-            <p>Apple ha reintroducido soporte limitado para chips Broadcom en <strong>macOS 15 Sequoia</strong>. Esta guía completa te muestra cómo activar todas las funciones de WiFi y Bluetooth.</p>
-            
-            <h3>🛒 Hardware Recomendado</h3>
-            <ul>
-                <li><strong>FENVI T919</strong> (PCIe + Bluetooth integrado)</li>
-                <li><strong>BCM94360CD</strong> (Para laptops con adaptador NGFF)</li>
-            </ul>
-            
-            <h3>📦 Kexts Obligatorios</h3>
-            <h4>1. Paquete Básico</h4>
-            <pre><code># Descargar con un solo comando:
-curl -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IOSkywalkFamily-v1.1.0.zip \
-     -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IO80211FamilyLegacy-v1.0.0.zip \
-     -O https://github.com/dortania/build-repo/releases/download/AirportBrcmFixup-c85ca2d/AirportBrcmFixup-2.1.9-RELEASE.zip</code></pre>
-            
-            <h4>2. Lista Completa</h4>
-            <ul>
-                <li><strong>IOSkywalk.kext</strong> - Base para WiFi</li>
-                <li><strong>IO80211FamilyLegacy</strong> - Incluye AirPortBrcmNIC.kext</li>
-                <li><strong>AirportBrcmFixup</strong> - Requiere injector</li>
-                <li><strong>AMFIPass</strong> - Para SIP parcialmente desactivado</li>
-            </ul>
-            
-            <h3>⚙️ Configuración de OpenCore</h3>
-            <p>Edita tu config.plist con los siguientes ajustes:</p>
-            <pre><code>&lt;key&gt;Kernel&lt;/key&gt;
-&lt;dict&gt;
-    &lt;key&gt;Add&lt;/key&gt;
-    &lt;array&gt;
-        &lt;dict&gt;
-            &lt;key&gt;BundlePath&lt;/key&gt;
-            &lt;string&gt;IOSkywalk.kext&lt;/string&gt;
-            &lt;key&gt;Enabled&lt;/key&gt;
-            &lt;true/&gt;
-        &lt;/dict&gt;
-    &lt;/array&gt;
-&lt;/dict&gt;</code></pre>
-            
-            <h3>✅ Pasos Finales</h3>
-            <ol>
-                <li>Reinicia en modo Recovery</li>
-                <li>Ejecuta en Terminal: <code>nvram csr-active-config="%03%08%00%00"</code></li>
-                <li>Aplica parches con OpenCore Legacy Patcher</li>
-            </ol>
-            
-            <blockquote>
-                <p>⚠️ Importante: Requiere SIP parcialmente desactivado para funcionar correctamente.</p>
-            </blockquote>
-        </div>
-    </template>
-
     <script>
-        // Tema oscuro/claro
-        const themeSwitch = document.getElementById('checkbox');
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        // Configuración del blog
+        const BLOG_CONFIG = {
+            postsUrl: 'https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts',
+            assetsUrl: 'https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/',
+            defaultImage: 'default-article-image.jpg'
+        };
 
-        if (prefersDarkScheme.matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeSwitch.checked = true;
+        // Sistema de tema
+        const themeToggle = document.getElementById('themeToggle');
+        const setTheme = (isDark) => {
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.checked = isDark;
+        };
+        
+        // Cargar preferencia de tema
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            setTheme(true);
         }
-
-        themeSwitch.addEventListener('change', () => {
-            const newTheme = themeSwitch.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
+        
+        // Cambiar tema
+        themeToggle.addEventListener('change', (e) => {
+            setTheme(e.target.checked);
         });
 
-        // Menú mobile
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('nav ul');
+        // Menú móvil
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        const toggleMenu = () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('show');
+            
+            // Animación del icono hamburguesa a X
+            menuToggle.classList.toggle('active');
+        };
+        
+        menuToggle.addEventListener('click', toggleMenu);
+        
+        // Cerrar menú al hacer clic en un enlace (solo móvil)
+        document.querySelectorAll('#mobileMenu .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleMenu();
+                const section = e.target.getAttribute('data-section');
+                filterArticles(section);
+            });
+        });
 
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('show');
+        // Función para agregar botones de copiar a los bloques de código
+        const addCopyButtons = () => {
+            document.querySelectorAll('.code-block-wrapper').forEach(wrapper => {
+                // Verificar si ya tiene un botón de copiar
+                if (wrapper.querySelector('.copy-button')) return;
+                
+                const codeBlock = wrapper.querySelector('pre');
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button';
+                copyButton.innerHTML = '<i class="far fa-copy"></i> <span>Copiar</span>';
+                
+                copyButton.addEventListener('click', () => {
+                    const code = codeBlock.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        copyButton.innerHTML = '<i class="fas fa-check"></i> <span>Copiado!</span>';
+                        copyButton.classList.add('copied');
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i class="far fa-copy"></i> <span>Copiar</span>';
+                            copyButton.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+                
+                wrapper.appendChild(copyButton);
+            });
+        };
+
+        // Función para formatear fechas
+        const formatDate = (dateString) => {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('es-ES', options);
+        };
+
+        // Función para calcular tiempo de lectura
+        const calculateReadingTime = (content) => {
+            const wordCount = content.split(/\s+/).length;
+            return Math.max(1, Math.ceil(wordCount / 200)); // 200 palabras por minuto
+        };
+
+        // Función para cargar la lista de artículos
+        const loadArticleList = async () => {
+            try {
+                const response = await fetch(BLOG_CONFIG.postsUrl);
+                if (!response.ok) throw new Error('Error al cargar artículos');
+                
+                const files = await response.json();
+                const markdownFiles = files.filter(file => file.name.endsWith('.md'));
+                
+                // Ordenar artículos por fecha (más recientes primero)
+                const articles = await Promise.all(markdownFiles.map(async file => {
+                    const metadata = await parseArticleMetadata(file.download_url);
+                    return {
+                        ...metadata,
+                        download_url: file.download_url,
+                        name: file.name
+                    };
+                }));
+                
+                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const articleList = document.getElementById('article-list');
+                articleList.innerHTML = '';
+                
+                articles.forEach(article => {
+                    const imageUrl = article.image || BLOG_CONFIG.assetsUrl + BLOG_CONFIG.defaultImage;
+                    const articleElement = document.createElement('article');
+                    articleElement.className = 'article-preview';
+                    articleElement.setAttribute('data-markdown-path', article.download_url);
+                    articleElement.setAttribute('data-category', article.category || 'guides');
+                    articleElement.setAttribute('data-image-url', imageUrl);
+                    
+                    articleElement.innerHTML = `
+                        <div class="article-image-container">
+                            <img src="${imageUrl}" alt="${article.title}" class="article-image" loading="lazy">
+                        </div>
+                        <div class="article-text">
+                            <div class="meta">
+                                <time datetime="${article.date}">${formatDate(article.date)}</time>
+                                <span>·</span>
+                                <span>${article.readingTime} min lectura</span>
+                            </div>
+                            ${article.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                            <h2>${article.title}</h2>
+                            <p>${article.description || 'Lee este interesante artículo'}</p>
+                        </div>
+                    `;
+                    
+                    articleElement.addEventListener('click', () => loadMarkdownArticle(articleElement));
+                    articleList.appendChild(articleElement);
+                });
+                
+                // Inicializar búsqueda después de cargar los artículos
+                initSearch();
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                document.getElementById('article-list').innerHTML = `
+                    <div class="error-message">
+                        <p>⚠️ Error al cargar los artículos. Por favor, inténtalo de nuevo más tarde.</p>
+                        <button class="back-button" onclick="window.location.reload()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
+                            </svg>
+                            <span>Reintentar</span>
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        // Función para extraer metadatos del artículo
+        const parseArticleMetadata = async (markdownUrl) => {
+            try {
+                const response = await fetch(markdownUrl);
+                if (!response.ok) throw new Error('Error al cargar artículo');
+                
+                const markdownContent = await response.text();
+                const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/);
+                
+                if (!frontMatter) {
+                    throw new Error('No se encontró front matter en el artículo');
+                }
+                
+                const content = markdownContent.split('---')[2].trim();
+                
+                const getMetaValue = (key) => {
+                    const match = frontMatter[1].match(new RegExp(`${key}:\\s*(.*)`));
+                    return match ? match[1].trim().replace(/"/g, '') : '';
+                };
+                
+                const title = getMetaValue('title') || 'Artículo sin título';
+                const date = getMetaValue('date') || new Date().toISOString();
+                const description = getMetaValue('description') || '';
+                const image = getMetaValue('image') || '';
+                const category = getMetaValue('category') || 'guides';
+                
+                let categories = ['General'];
+                const categoriesMatch = getMetaValue('categories');
+                if (categoriesMatch) {
+                    categories = categoriesMatch.replace(/[\[\]]/g, '').split(',').map(cat => cat.trim());
+                }
+                
+                return {
+                    title,
+                    date,
+                    description,
+                    image,
+                    category,
+                    categories,
+                    readingTime: calculateReadingTime(content)
+                };
+            } catch (error) {
+                console.error('Error parsing metadata:', error);
+                return {
+                    title: 'Artículo',
+                    date: new Date().toISOString(),
+                    categories: ['General'],
+                    readingTime: 5
+                };
+            }
+        };
+
+        // Cargar artículo Markdown
+        const loadMarkdownArticle = async (articleElement) => {
+            try {
+                const markdownPath = articleElement.getAttribute('data-markdown-path');
+                const imageUrl = articleElement.getAttribute('data-image-url');
+                const response = await fetch(markdownPath);
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const markdownContent = await response.text();
+                
+                // Parsear front matter
+                const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/)[1];
+                const content = markdownContent.split('---')[2].trim();
+                
+                // Extraer metadatos
+                const getMetaValue = (key) => {
+                    const match = frontMatter.match(new RegExp(`${key}:\\s*(.*)`));
+                    return match ? match[1].trim().replace(/"/g, '') : '';
+                };
+                
+                const title = getMetaValue('title');
+                const date = new Date(getMetaValue('date'));
+                const categories = getMetaValue('categories')
+                                  .replace(/[\[\]]/g, '')
+                                  .split(',')
+                                  .map(cat => cat.trim());
+                
+                // Calcular tiempo de lectura (200 palabras/minuto)
+                const wordCount = content.split(/\s+/).length;
+                const readingTime = Math.ceil(wordCount / 200);
+                
+                // URL actual para compartir
+                const currentUrl = encodeURIComponent(window.location.href);
+                const shareTitle = encodeURIComponent(title);
+                
+                // Procesar el contenido Markdown y envolver los bloques de código
+                let processedContent = marked.parse(content);
+                
+                // Envolver los bloques <pre> en un contenedor para el botón de copiar
+                processedContent = processedContent.replace(/<pre>([\s\S]*?)<\/pre>/g, (match, code) => {
+                    return `<div class="code-block-wrapper"><pre class="code-block">${code}</pre></div>`;
+                });
+                
+                // Renderizar artículo con imagen destacada y botones de compartir
+                document.getElementById('article-content').innerHTML = `
+                    <div class="meta">
+                        <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                        <span>·</span>
+                        <span>${readingTime} min lectura</span>
+                    </div>
+                    ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                    <h1>${title}</h1>
+                    
+                    <img src="${imageUrl}" alt="${title}" class="featured-image">
+                    
+                    <div class="share-buttons">
+                        <a href="https://twitter.com/intent/tweet?url=${currentUrl}&text=${shareTitle}" class="share-button twitter" target="_blank" rel="noopener">
+                            <i class="fab fa-twitter"></i>
+                            <span class="text">Twitter</span>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${currentUrl}" class="share-button facebook" target="_blank" rel="noopener">
+                            <i class="fab fa-facebook-f"></i>
+                            <span class="text">Facebook</span>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${currentUrl}&title=${shareTitle}" class="share-button linkedin" target="_blank" rel="noopener">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span class="text">LinkedIn</span>
+                        </a>
+                        <a href="https://wa.me/?text=${shareTitle}%20${currentUrl}" class="share-button whatsapp" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            <span class="text">WhatsApp</span>
+                        </a>
+                        <a href="https://t.me/share/url?url=${currentUrl}&text=${shareTitle}" class="share-button telegram" target="_blank" rel="noopener">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span class="text">Telegram</span>
+                        </a>
+                    </div>
+                    
+                    <div class="markdown-content">${processedContent}</div>
+                `;
+                
+                // Agregar botones de copiar a los bloques de código
+                addCopyButtons();
+                
+                document.getElementById('article-list').style.display = 'none';
+                document.getElementById('article-full').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error("Error cargando el artículo:", error);
+                document.getElementById('article-content').innerHTML = `
+                    <div class="error-message">
+                        <p>⚠️ Error al cargar el artículo. Por favor, inténtalo de nuevo.</p>
+                        <button class="back-button" onclick="window.location.reload()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
+                            </svg>
+                            <span>Reintentar</span>
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        // Navegación por categorías
+        const filterArticles = (category) => {
+            document.querySelectorAll('.article-preview').forEach(article => {
+                const articleCategory = article.getAttribute('data-category');
+                if (category === 'home' || articleCategory === category) {
+                    article.style.display = 'flex';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('article-list').style.display = 'block';
+            document.getElementById('article-full').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Inicializar búsqueda
+        const initSearch = () => {
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+            
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const term = searchInput.value.trim().toLowerCase();
+                    
+                    if (term === '') {
+                        filterArticles('home');
+                        return;
+                    }
+                    
+                    document.querySelectorAll('.article-preview').forEach(article => {
+                        const title = article.querySelector('h2').textContent.toLowerCase();
+                        const description = article.querySelector('p').textContent.toLowerCase();
+                        const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                        
+                        const matches = title.includes(term) || 
+                                      description.includes(term) || 
+                                      tags.some(tag => tag.includes(term));
+                        
+                        article.style.display = matches ? 'flex' : 'none';
+                    });
+                }, 300);
+            });
+        };
+
+        // Eventos de navegación
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.getAttribute('data-section');
+                filterArticles(section);
+            });
+        });
+
+        document.querySelector('.back-button').addEventListener('click', function() {
+            filterArticles('home');
         });
 
         // Año actual
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Sistema de navegación de artículos
-        const articleList = document.getElementById('article-list');
-        const articleFull = document.getElementById('article-full');
-        const articleContent = document.getElementById('article-content');
-        const backButton = document.querySelector('.back-button');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        // Mostrar artículo completo
-        document.querySelector('.article-preview').addEventListener('click', function() {
-            const template = document.getElementById('broadcom-template');
-            const clone = template.content.cloneNode(true);
-            
-            articleContent.innerHTML = '';
-            articleContent.appendChild(clone);
-            
-            articleList.style.display = 'none';
-            articleFull.style.display = 'block';
-            
-            // Scroll suave al principio del artículo
-            window.scrollTo({
-                top: articleFull.offsetTop - 20,
-                behavior: 'smooth'
+        // Precarga de recursos
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
             });
-        });
+        }
 
-        // Volver a la lista de artículos
-        backButton.addEventListener('click', function() {
-            articleList.style.display = 'block';
-            articleFull.style.display = 'none';
-            
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Navegación del menú
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const section = this.getAttribute('data-section');
-                
-                if (section === 'home') {
-                    articleList.style.display = 'block';
-                    articleFull.style.display = 'none';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                // Puedes añadir más secciones aquí (hardware, guides)
-            });
+        // Al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticleList();
         });
     </script>
 </body>
