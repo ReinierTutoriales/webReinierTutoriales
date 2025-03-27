@@ -2,10 +2,14 @@
 title: "Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia"
 date: 2025-03-27
 description: "Activa WiFi/Bluetooth Broadcom en macOS 15 Sequoia con esta guía paso a paso"
-image: "Broadcom-BCM94360.png"  # ← Así se referencia la imagen
+image: "https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png"
 category: "guides"
 categories: ["macOS", "Hackintosh"]
 ---
+
+## Contenido del artículo
+
+![Chip Broadcom BCM94360](https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png)
 
 ¡Bienvenido al repositorio oficial de **ReinierTutoriales**! Esta guía te llevará paso a paso para habilitar soporte completo de tarjetas **Broadcom** (WiFi y Bluetooth) en **macOS 15 Sequoia**, ideal para usuarios de Hackintosh.  
 
