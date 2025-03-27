@@ -50,7 +50,7 @@ Descarga e inyecta estos kexts en tu `config.plist` para habilitar todas las fun
 
 5. ✅ **Orden de los Kexts**  
    Organiza los kexts en tu `config.plist` como se muestra:  
-   ![Orden de Kexts y MinKernel](IMG/orden-kexts-MinKernel.PNG "Orden correcto de kexts en config.plist")  
+   ![Orden de Kexts y MinKernel](https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/orden-kexts-MinKernel.PNG "Orden correcto de kexts en config.plist")  
    - Añade `MinKernel` con valor `23.0.0` para compatibilidad con Sequoia.
 
 
