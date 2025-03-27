@@ -3,45 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReinierTutoriales | Blog de Tecnología</title>
+    <title>ReinierTutoriales | Tecnología y Desarrollo</title>
+    <!-- Fuentes optimizadas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Tema claro (default) */
-            --primary-color: #2563eb;  /* Azul tecnológico */
-            --secondary-color: #1e40af;
-            --bg-color: #ffffff;
-            --text-color: #1f2937;
-            --card-bg: #f9fafb;
-            --border-color: #e5e7eb;
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --bg: #ffffff;
+            --text: #1a1a1a;  /* Texto oscuro para mejor contraste */
+            --card-bg: #f8fafc;
+            --border: #e2e8f0;
+            --text-soft: #4b5563;
+            --switch-bg: #e2e8f0;
+            --switch-circle: #ffffff;
         }
 
         [data-theme="dark"] {
             /* Tema oscuro */
-            --primary-color: #3b82f6;
-            --secondary-color: #60a5fa;
-            --bg-color: #1f2937;
-            --text-color: #f9fafb;
-            --card-bg: #111827;
-            --border-color: #374151;
+            --primary: #3b82f6;
+            --primary-dark: #60a5fa;
+            --bg: #0f172a;
+            --text: #f8fafc;  /* Texto claro para mejor legibilidad */
+            --card-bg: #1e293b;
+            --border: #334155;
+            --text-soft: #94a3b8;
+            --switch-bg: #475569;
+            --switch-circle: #e2e8f0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.3s ease, color 0.2s ease, border-color 0.3s ease;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
-        /* Header estático */
+        /* Header mejorado */
         header {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             padding: 1rem;
             position: sticky;
@@ -61,13 +72,17 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            letter-spacing: -0.5px;
         }
 
-        .logo img {
-            height: 30px;
+        /* Menú desplegable mobile */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         nav ul {
@@ -80,73 +95,165 @@
             color: white;
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
         }
 
-        /* Botón tema oscuro/claro */
-        .theme-toggle {
-            background: transparent;
-            border: none;
-            color: white;
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Switch moderno */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin-left: 1rem;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
             cursor: pointer;
-            font-size: 1.2rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-bg);
+            border-radius: 34px;
+            transition: .4s;
         }
 
-        /* Contenido principal */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--switch-circle);
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-dark);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Contenido centrado */
         .container {
-            max-width: 1200px;
+            max-width: 800px;  /* Más estrecho para mejor lectura */
             margin: 2rem auto;
             padding: 0 1.5rem;
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            gap: 2rem;
         }
 
-        /* Tarjetas de noticias tecnológicas */
-        .news-card {
+        /* Artículos optimizados */
+        .article {
             background: var(--card-bg);
             border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
         }
 
-        .news-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        .article h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            line-height: 1.3;
         }
 
-        .card-content {
-            padding: 1.5rem;
+        .article p {
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
         }
 
-        .category {
+        .meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .tag {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-right: 0.5rem;
         }
 
         /* Footer */
         footer {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             text-align: center;
             padding: 2rem;
             margin-top: 3rem;
+            font-size: 0.9rem;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
+            .menu-toggle {
+                display: block;
             }
 
             nav ul {
                 display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--primary-dark);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            nav ul li {
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .article {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -154,34 +261,49 @@
 <body>
     <header>
         <div class="nav-container">
-            <div class="logo">
-                <span>ReinierTutoriales</span>
-            </div>
+            <div class="logo">ReinierTutoriales</div>
+            <button class="menu-toggle" aria-label="Menú">☰</button>
             <nav>
                 <ul>
                     <li><a href="#">Inicio</a></li>
                     <li><a href="#">Programación</a></li>
-                    <li><a href="#">Hardware</a></li>
                     <li><a href="#">IA</a></li>
-                    <li><a href="#">Tutoriales</a></li>
+                    <li><a href="#">Hardware</a></li>
+                    <li><a href="#">Cursos</a></li>
                 </ul>
             </nav>
-            <button class="theme-toggle" aria-label="Cambiar tema">🌓</button>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
         </div>
     </header>
 
     <main class="container">
-        <article class="news-card">
-            <img src="https://source.unsplash.com/random/800x400/?tech" alt="Novedades en IA">
-            <div class="card-content">
-                <span class="category">Inteligencia Artificial</span>
-                <h2>Lo último en GPT-5: ¿Qué esperar?</h2>
-                <p>Analizamos los rumores y filtraciones sobre la próxima generación de modelos de OpenAI.</p>
-                <a href="#" class="btn">Leer más</a>
+        <article class="article">
+            <div class="meta">
+                <span>10 Junio 2023</span>
+                <span>·</span>
+                <span>8 min lectura</span>
             </div>
+            <span class="tag">Inteligencia Artificial</span>
+            <h2>Cómo GPT-5 está revolucionando el desarrollo web</h2>
+            <p>Exploramos las nuevas capacidades de los modelos de lenguaje y cómo integrarlos en tus proyectos...</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula...</p>
         </article>
 
-        <!-- Más noticias tecnológicas -->
+        <article class="article">
+            <div class="meta">
+                <span>5 Junio 2023</span>
+                <span>·</span>
+                <span>5 min lectura</span>
+            </div>
+            <span class="tag">JavaScript</span>
+            <h2>Next.js 14: Las mejores características</h2>
+            <p>Descubre cómo el nuevo framework está cambiando el desarrollo frontend...</p>
+        </article>
     </main>
 
     <footer>
@@ -190,22 +312,30 @@
 
     <script>
         // Tema oscuro/claro
-        const themeToggle = document.querySelector('.theme-toggle');
+        const themeSwitch = document.getElementById('checkbox');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-        // Detecta el tema del sistema
+        // Detección inicial del tema
         if (prefersDarkScheme.matches) {
             document.documentElement.setAttribute('data-theme', 'dark');
+            themeSwitch.checked = true;
         }
 
-        // Botón manual
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        // Cambio manual con switch
+        themeSwitch.addEventListener('change', () => {
+            const newTheme = themeSwitch.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
         });
 
-        // Año actual en el footer
+        // Menú mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('nav ul');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+
+        // Año actual
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
