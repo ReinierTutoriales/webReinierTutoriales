@@ -78,7 +78,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* Barra de búsqueda mejorada */
+        /* Barra de búsqueda */
         .search-container {
             position: relative;
             margin-left: auto;
@@ -107,6 +107,36 @@
             transform: translateY(-50%);
             color: white;
             pointer-events: none;
+        }
+
+        /* Menú de navegación */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
         }
 
         /* Selector de tema */
@@ -156,13 +186,14 @@
             transform: translateX(26px);
         }
 
-        /* Artículos */
+        /* Contenido principal */
         .container {
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
+        /* Artículos */
         .article-preview {
             display: flex;
             gap: 1.5rem;
@@ -180,12 +211,24 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .article-image {
-            width: 200px;
+        .article-image-container {
+            flex: 0 0 200px;
             height: 150px;
-            object-fit: cover;
+            position: relative;
+            overflow: hidden;
             border-radius: 8px;
             border: 1px solid var(--border);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .article-preview:hover .article-image {
+            transform: scale(1.05);
         }
 
         .article-text {
@@ -253,6 +296,15 @@
             border: 1px solid var(--border);
         }
 
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-container {
@@ -270,10 +322,26 @@
                 flex-direction: column;
             }
             
-            .article-image {
+            .article-image-container {
+                flex: 0 0 auto;
                 width: 100%;
-                height: auto;
-                max-height: 200px;
+                height: 200px;
+            }
+            
+            nav ul {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
         }
     </style>
@@ -283,17 +351,33 @@
         <div class="nav-container">
             <div class="logo">ReinierTutoriales</div>
             
-            <!-- Barra de búsqueda mejorada -->
+            <!-- Barra de búsqueda -->
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput">
                 <span class="search-icon">🔍</span>
             </div>
+            
+            <!-- Menú de navegación -->
+            <nav>
+                <ul id="mainMenu">
+                    <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
+                    <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
+                </ul>
+            </nav>
             
             <!-- Selector de tema -->
             <label class="theme-switch">
                 <input type="checkbox" id="themeToggle">
                 <span class="slider"></span>
             </label>
+            
+            <!-- Menú móvil -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18"></path>
+                </svg>
+            </button>
         </div>
     </header>
 
@@ -301,10 +385,13 @@
         <!-- Vista de lista de artículos -->
         <div id="article-list" class="article-list">
             <article class="article-preview" 
-                     data-markdown-path="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md">
-                <img src="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png" 
-                     alt="Chip Broadcom BCM94360" 
-                     class="article-image">
+                     data-markdown-path="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md"
+                     data-category="guides">
+                <div class="article-image-container">
+                    <img src="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png" 
+                         alt="Chip Broadcom BCM94360" 
+                         class="article-image">
+                </div>
                 <div class="article-text">
                     <div class="meta">
                         <span>27 Marzo 2025</span>
@@ -349,6 +436,14 @@
             const theme = e.target.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
+        });
+
+        // Menú móvil
+        const menuToggle = document.getElementById('menuToggle');
+        const mainMenu = document.getElementById('mainMenu');
+        
+        menuToggle.addEventListener('click', () => {
+            mainMenu.classList.toggle('show');
         });
 
         // Cargar artículo Markdown
@@ -403,15 +498,37 @@
             }
         }
 
+        // Navegación por categorías
+        function filterArticles(category) {
+            document.querySelectorAll('.article-preview').forEach(article => {
+                const articleCategory = article.getAttribute('data-category');
+                if (category === 'home' || articleCategory === category) {
+                    article.style.display = 'flex';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('article-list').style.display = 'block';
+            document.getElementById('article-full').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // Eventos
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                filterArticles(section);
+            });
+        });
+
         document.querySelector('.article-preview').addEventListener('click', function() {
             loadMarkdownArticle(this);
         });
 
         document.querySelector('.back-button').addEventListener('click', function() {
-            document.getElementById('article-list').style.display = 'block';
-            document.getElementById('article-full').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterArticles('home');
         });
 
         // Búsqueda
