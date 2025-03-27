@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReinierTutoriales | Tecnología y Desarrollo</title>
     <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo">
-    <!-- OpenGraph -->
-    <meta property="og:title" content="ReinierTutoriales | Tutoriales de tecnología">
-    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/assets/img/Broadcom-BCM94360.png">
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Fuentes -->
@@ -24,39 +21,47 @@
             --text: #1a1a1a;
             --card-bg: #f8fafc;
             --border: #e2e8f0;
-            --text-soft: #4b5563;
+            --text-soft: #64748b;
+            --switch-bg: #e2e8f0;
+            --switch-circle: #ffffff;
         }
 
         [data-theme="dark"] {
             --primary: #3b82f6;
+            --primary-dark: #60a5fa;
             --bg: #0f172a;
             --text: #f8fafc;
             --card-bg: #1e293b;
             --border: #334155;
+            --text-soft: #94a3b8;
+            --switch-bg: #475569;
+            --switch-circle: #e2e8f0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg);
+            background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
         }
 
-        /* Header y búsqueda */
+        /* Header */
         header {
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
             padding: 1rem;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
@@ -67,31 +72,112 @@
             gap: 1.5rem;
         }
 
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Barra de búsqueda mejorada */
         .search-container {
-            flex: 1;
-            max-width: 400px;
             position: relative;
+            margin-left: auto;
+            flex: 1;
+            max-width: 300px;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 2rem 0.5rem 1rem;
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
             color: white;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            pointer-events: none;
+        }
+
+        /* Selector de tema */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 1rem;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-bg);
+            border-radius: 24px;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--switch-circle);
+            border-radius: 50%;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-dark);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         /* Artículos */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
         .article-preview {
             display: flex;
             gap: 1.5rem;
-            background: var(--card-bg);
+            background-color: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             border: 1px solid var(--border);
             cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .article-preview:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .article-image {
@@ -102,22 +188,92 @@
             border: 1px solid var(--border);
         }
 
+        .article-text {
+            flex: 1;
+        }
+
+        .meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-soft);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* Vista de artículo completo */
+        .article-full {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .markdown-content {
+            line-height: 1.7;
+        }
+
         .markdown-content img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin: 1rem 0;
-            display: block;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .search-container {
+                order: 1;
+                min-width: 100%;
+                margin: 0.5rem 0 0;
+            }
+            
             .article-preview {
                 flex-direction: column;
             }
+            
             .article-image {
                 width: 100%;
                 height: auto;
+                max-height: 200px;
             }
         }
     </style>
@@ -126,20 +282,23 @@
     <header>
         <div class="nav-container">
             <div class="logo">ReinierTutoriales</div>
+            
+            <!-- Barra de búsqueda mejorada -->
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Buscar..." id="searchInput">
+                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput">
+                <span class="search-icon">🔍</span>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Hardware</a></li>
-                    <li><a href="#">Guías</a></li>
-                </ul>
-            </nav>
+            
+            <!-- Selector de tema -->
+            <label class="theme-switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
     </header>
 
     <main class="container">
+        <!-- Vista de lista de artículos -->
         <div id="article-list" class="article-list">
             <article class="article-preview" 
                      data-markdown-path="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md">
@@ -154,46 +313,93 @@
                     </div>
                     <span class="tag">macOS</span>
                     <span class="tag">Hackintosh</span>
-                    <h2>Guía Broadcom WiFi/Bluetooth en macOS 15</h2>
-                    <p>Soporte completo para chips Broadcom en macOS 15 Sequoia</p>
+                    <h2>Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia</h2>
+                    <p>Activa WiFi/Bluetooth Broadcom en macOS 15 Sequoia con esta guía paso a paso.</p>
                 </div>
             </article>
         </div>
 
-        <div id="article-full" class="article-full" style="display: none;">
-            <button class="back-button">← Volver</button>
+        <!-- Vista de artículo completo -->
+        <div id="article-full" class="article-full">
+            <button class="back-button">
+                <span>←</span>
+                <span>Volver a los artículos</span>
+            </button>
             <div id="article-content" class="article-content"></div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; <span id="year"></span> ReinierTutoriales</p>
+        <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
 
     <script>
-        // Cargar artículo desde GitHub
+        // Sistema de tema
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Cargar preferencia de tema
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.checked = true;
+        }
+        
+        // Cambiar tema
+        themeToggle.addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Cargar artículo Markdown
         async function loadMarkdownArticle(articleElement) {
             try {
-                const markdownUrl = articleElement.getAttribute('data-markdown-path');
-                const response = await fetch(markdownUrl);
-                const markdown = await response.text();
+                const markdownPath = articleElement.getAttribute('data-markdown-path');
+                const response = await fetch(markdownPath);
                 
-                const [_, frontMatter, content] = markdown.split('---');
-                const title = frontMatter.match(/title:\s*"(.*?)"/)[1];
-                const date = frontMatter.match(/date:\s*(.*)/)[1];
+                if (!response.ok) throw new Error('Error al cargar el artículo');
+                const markdownContent = await response.text();
                 
+                // Parsear front matter
+                const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/)[1];
+                const content = markdownContent.split('---')[2].trim();
+                
+                // Extraer metadatos
+                const getMetaValue = (key) => frontMatter.match(new RegExp(`${key}:\\s*(.*)`))[1].trim().replace(/"/g, '');
+                const title = getMetaValue('title');
+                const date = new Date(getMetaValue('date'));
+                const categories = getMetaValue('categories')
+                                  .replace(/[\[\]]/g, '')
+                                  .split(',')
+                                  .map(cat => cat.trim());
+                
+                // Renderizar artículo
                 document.getElementById('article-content').innerHTML = `
-                    <h2>${title}</h2>
                     <div class="meta">
-                        <span>${new Date(date).toLocaleDateString('es-ES')}</span>
+                        <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                        <span>·</span>
+                        <span>${Math.ceil(content.split(/\s+/).length / 200)} min lectura</span>
                     </div>
+                    ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                    <h2>${title}</h2>
                     <div class="markdown-content">${marked.parse(content)}</div>
                 `;
                 
                 document.getElementById('article-list').style.display = 'none';
                 document.getElementById('article-full').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
             } catch (error) {
                 console.error("Error:", error);
+                document.getElementById('article-content').innerHTML = `
+                    <div class="error-message">
+                        <p>⚠️ Error al cargar el artículo. Por favor, inténtalo de nuevo.</p>
+                        <button class="back-button" onclick="window.location.reload()">
+                            <span>↻</span>
+                            <span>Reintentar</span>
+                        </button>
+                    </div>
+                `;
             }
         }
 
@@ -205,6 +411,16 @@
         document.querySelector('.back-button').addEventListener('click', function() {
             document.getElementById('article-list').style.display = 'block';
             document.getElementById('article-full').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Búsqueda
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.article-preview').forEach(article => {
+                const text = article.textContent.toLowerCase();
+                article.style.display = text.includes(term) ? 'flex' : 'none';
+            });
         });
 
         // Año actual
