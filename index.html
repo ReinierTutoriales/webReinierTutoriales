@@ -265,11 +265,14 @@
             margin: 2rem auto;
             padding: 0 1.5rem;
             flex: 1;
+            width: 100%;
+            overflow-x: hidden; /* Evita desbordamiento horizontal */
         }
 
         /* Artículos - Lista */
         .article-list {
             display: block;
+            width: 100%;
         }
 
         .article-preview {
@@ -282,6 +285,8 @@
             border: 1px solid var(--border);
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            overflow: hidden; /* Evita que los hijos desborden */
         }
 
         .article-preview:hover {
@@ -310,6 +315,9 @@
 
         .article-text {
             flex: 1;
+            min-width: 0; /* Permite que el texto se ajuste correctamente */
+            word-wrap: break-word; /* Rompe palabras largas */
+            overflow-wrap: break-word; /* Alternativa moderna */
         }
 
         .meta {
@@ -318,6 +326,7 @@
             margin-bottom: 0.75rem;
             font-size: 0.875rem;
             color: var(--text-soft);
+            flex-wrap: wrap; /* Permite que los elementos se ajusten */
         }
 
         .tag {
@@ -329,6 +338,7 @@
             font-size: 0.75rem;
             font-weight: 600;
             margin-right: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         /* Artículo completo */
@@ -339,6 +349,8 @@
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
+            width: 100%;
+            overflow: hidden; /* Evita desbordamiento */
         }
 
         .back-button {
@@ -363,6 +375,8 @@
 
         .markdown-content {
             line-height: 1.7;
+            width: 100%;
+            overflow: hidden; /* Evita desbordamiento */
         }
 
         .markdown-content h2,
@@ -370,10 +384,12 @@
         .markdown-content h4 {
             margin: 1.5rem 0 1rem;
             color: var(--text);
+            word-break: break-word; /* Rompe títulos largos */
         }
 
         .markdown-content p {
             margin-bottom: 1rem;
+            word-break: break-word; /* Rompe párrafos largos */
         }
 
         .markdown-content img {
@@ -388,14 +404,17 @@
             background-color: var(--bg);
             padding: 1rem;
             border-radius: 8px;
-            overflow-x: auto;
+            overflow-x: auto; /* Scroll horizontal para código */
             margin: 1.5rem 0;
             border: 1px solid var(--border);
+            width: 100%;
         }
 
         .markdown-content code {
             font-family: 'Roboto Mono', monospace;
             font-size: 0.9rem;
+            white-space: pre-wrap; /* Permite que el código se ajuste */
+            word-break: break-word;
         }
 
         /* Footer */
@@ -448,6 +467,10 @@
                 width: 100%;
                 height: auto;
                 max-height: 200px;
+            }
+
+            .article-text {
+                width: 100%;
             }
         }
 
