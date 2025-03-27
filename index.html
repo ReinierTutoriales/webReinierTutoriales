@@ -162,25 +162,24 @@
             padding: 0 1.5rem;
         }
 
-        .article {
+        /* Vista de lista de artículos */
+        .article-list {
+            display: block;
+        }
+
+        .article-preview {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .article h2 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-            color: var(--text);
-            line-height: 1.3;
-        }
-
-        .article p {
-            color: var(--text-soft);
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
+        .article-preview:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .meta {
@@ -203,6 +202,80 @@
             margin-right: 0.5rem;
         }
 
+        /* Vista de artículo completo */
+        .article-full {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .article-content ul, 
+        .article-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+        
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-content h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text);
+        }
+        
+        .article-content pre {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+        
+        .article-content code {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .article-content blockquote {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: var(--text-soft);
+            font-style: italic;
+        }
+
         footer {
             background: var(--primary);
             color: white;
@@ -210,22 +283,6 @@
             padding: 2rem;
             margin-top: 3rem;
             font-size: 0.9rem;
-        }
-
-        .read-more {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--primary);
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 1rem;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .read-more:hover {
-            background: var(--primary-dark);
         }
 
         @media (max-width: 768px) {
@@ -258,7 +315,7 @@
                 padding: 0 1rem;
             }
 
-            .article {
+            .article-preview, .article-full {
                 padding: 1.5rem;
             }
         }
@@ -271,9 +328,9 @@
             <button class="menu-toggle" aria-label="Menú">☰</button>
             <nav>
                 <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Hardware</a></li>
-                    <li><a href="#">Guías</a></li>
+                    <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
+                    <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
                 </ul>
             </nav>
             <div class="theme-switch-wrapper">
@@ -286,23 +343,94 @@
     </header>
 
     <main class="container">
-        <article class="article">
-            <div class="meta">
-                <span>27 Marzo 2025</span>
-                <span>·</span>
-                <span>10 min lectura</span>
-            </div>
-            <span class="tag">macOS</span>
-            <span class="tag">Hackintosh</span>
-            <h2><a href="https://github.com/ReinierTutoriales/webReinierTutoriales/blob/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md">Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</a></h2>
-            <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
-            <a href="https://github.com/ReinierTutoriales/webReinierTutoriales/blob/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md" class="read-more">Leer artículo completo →</a>
-        </article>
+        <!-- Vista de lista de artículos -->
+        <div id="article-list" class="article-list">
+            <article class="article-preview" data-article="broadcom">
+                <div class="meta">
+                    <span>27 Marzo 2025</span>
+                    <span>·</span>
+                    <span>10 min lectura</span>
+                </div>
+                <span class="tag">macOS</span>
+                <span class="tag">Hackintosh</span>
+                <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
+                <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
+            </article>
+        </div>
+
+        <!-- Vista de artículo completo -->
+        <div id="article-full" class="article-full">
+            <button class="back-button">← Volver a los artículos</button>
+            <div id="article-content" class="article-content"></div>
+        </div>
     </main>
 
     <footer>
         <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
+
+    <!-- Plantilla para el artículo Broadcom -->
+    <template id="broadcom-template">
+        <div class="meta">
+            <span>27 Marzo 2025</span>
+            <span>·</span>
+            <span>10 min lectura</span>
+        </div>
+        <span class="tag">macOS</span>
+        <span class="tag">Hackintosh</span>
+        <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
+        
+        <div class="article-content">
+            <p>Apple ha reintroducido soporte limitado para chips Broadcom en <strong>macOS 15 Sequoia</strong>. Esta guía completa te muestra cómo activar todas las funciones de WiFi y Bluetooth.</p>
+            
+            <h3>🛒 Hardware Recomendado</h3>
+            <ul>
+                <li><strong>FENVI T919</strong> (PCIe + Bluetooth integrado)</li>
+                <li><strong>BCM94360CD</strong> (Para laptops con adaptador NGFF)</li>
+            </ul>
+            
+            <h3>📦 Kexts Obligatorios</h3>
+            <h4>1. Paquete Básico</h4>
+            <pre><code># Descargar con un solo comando:
+curl -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IOSkywalkFamily-v1.1.0.zip \
+     -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IO80211FamilyLegacy-v1.0.0.zip \
+     -O https://github.com/dortania/build-repo/releases/download/AirportBrcmFixup-c85ca2d/AirportBrcmFixup-2.1.9-RELEASE.zip</code></pre>
+            
+            <h4>2. Lista Completa</h4>
+            <ul>
+                <li><strong>IOSkywalk.kext</strong> - Base para WiFi</li>
+                <li><strong>IO80211FamilyLegacy</strong> - Incluye AirPortBrcmNIC.kext</li>
+                <li><strong>AirportBrcmFixup</strong> - Requiere injector</li>
+                <li><strong>AMFIPass</strong> - Para SIP parcialmente desactivado</li>
+            </ul>
+            
+            <h3>⚙️ Configuración de OpenCore</h3>
+            <p>Edita tu config.plist con los siguientes ajustes:</p>
+            <pre><code>&lt;key&gt;Kernel&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;Add&lt;/key&gt;
+    &lt;array&gt;
+        &lt;dict&gt;
+            &lt;key&gt;BundlePath&lt;/key&gt;
+            &lt;string&gt;IOSkywalk.kext&lt;/string&gt;
+            &lt;key&gt;Enabled&lt;/key&gt;
+            &lt;true/&gt;
+        &lt;/dict&gt;
+    &lt;/array&gt;
+&lt;/dict&gt;</code></pre>
+            
+            <h3>✅ Pasos Finales</h3>
+            <ol>
+                <li>Reinicia en modo Recovery</li>
+                <li>Ejecuta en Terminal: <code>nvram csr-active-config="%03%08%00%00"</code></li>
+                <li>Aplica parches con OpenCore Legacy Patcher</li>
+            </ol>
+            
+            <blockquote>
+                <p>⚠️ Importante: Requiere SIP parcialmente desactivado para funcionar correctamente.</p>
+            </blockquote>
+        </div>
+    </template>
 
     <script>
         // Tema oscuro/claro
@@ -329,6 +457,57 @@
 
         // Año actual
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Sistema de navegación de artículos
+        const articleList = document.getElementById('article-list');
+        const articleFull = document.getElementById('article-full');
+        const articleContent = document.getElementById('article-content');
+        const backButton = document.querySelector('.back-button');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Mostrar artículo completo
+        document.querySelector('.article-preview').addEventListener('click', function() {
+            const template = document.getElementById('broadcom-template');
+            const clone = template.content.cloneNode(true);
+            
+            articleContent.innerHTML = '';
+            articleContent.appendChild(clone);
+            
+            articleList.style.display = 'none';
+            articleFull.style.display = 'block';
+            
+            // Scroll suave al principio del artículo
+            window.scrollTo({
+                top: articleFull.offsetTop - 20,
+                behavior: 'smooth'
+            });
+        });
+
+        // Volver a la lista de artículos
+        backButton.addEventListener('click', function() {
+            articleList.style.display = 'block';
+            articleFull.style.display = 'none';
+            
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Navegación del menú
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                
+                if (section === 'home') {
+                    articleList.style.display = 'block';
+                    articleFull.style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                // Puedes añadir más secciones aquí (hardware, guides)
+            });
+        });
     </script>
 </body>
 </html>
