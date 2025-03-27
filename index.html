@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReinierTutoriales | Tecnología y Desarrollo</title>
+    <!-- SEO Meta Tags -->
+    <title>ReinierTutoriales | Tutoriales de Hackintosh y Tecnología</title>
+    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo. Guías paso a paso con OpenCore, soluciones Broadcom y más.">
+    <meta name="keywords" content="Hackintosh, macOS, Broadcom, OpenCore, WiFi, Bluetooth, tutoriales tecnología">
+    <meta name="author" content="ReinierTutoriales">
+    <!-- OpenGraph / Redes Sociales -->
+    <meta property="og:title" content="ReinierTutoriales | Tutoriales de Hackintosh y Tecnología">
+    <meta property="og:description" content="Aprende con tutoriales técnicos sobre Hackintosh y desarrollo de software.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reiniertutoriales.github.io/webReinierTutoriales/">
+    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/img/og-preview.jpg">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Fuentes Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Marked.js para renderizado Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -63,14 +78,58 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
+        /* Barra de Búsqueda */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            position: relative;
+            flex-grow: 1;
+            max-width: 300px;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: absolute;
+            right: 10px;
+        }
+
+        /* Resto de tu CSS... (mantén todo el estilo original) */
         .menu-toggle {
             display: none;
             background: none;
@@ -162,7 +221,6 @@
             padding: 0 1.5rem;
         }
 
-        /* Vista de lista de artículos */
         .article-list {
             display: block;
         }
@@ -202,7 +260,6 @@
             margin-right: 0.5rem;
         }
 
-        /* Vista de artículo completo */
         .article-full {
             display: none;
             background: var(--card-bg);
@@ -232,29 +289,21 @@
             background: var(--primary-dark);
         }
 
-        .article-content img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 1rem 0;
+        /* Estilos para contenido Markdown */
+        .markdown-content {
+            line-height: 1.7;
         }
-        
-        .article-content ul, 
-        .article-content ol {
-            margin: 1rem 0;
-            padding-left: 2rem;
-        }
-        
-        .article-content li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .article-content h3 {
-            font-size: 1.5rem;
-            margin: 1.5rem 0 1rem;
+        .markdown-content h3 {
+            font-size: 1.4rem;
+            margin: 1.8rem 0 1rem;
             color: var(--text);
         }
-        
-        .article-content pre {
+        .markdown-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .markdown-content pre {
             background: var(--bg);
             padding: 1rem;
             border-radius: 8px;
@@ -262,13 +311,11 @@
             margin: 1.5rem 0;
             border: 1px solid var(--border);
         }
-        
-        .article-content code {
+        .markdown-content code {
             font-family: 'Roboto Mono', monospace;
             font-size: 0.9rem;
         }
-        
-        .article-content blockquote {
+        .markdown-content blockquote {
             border-left: 3px solid var(--primary);
             padding-left: 1rem;
             margin: 1.5rem 0;
@@ -285,11 +332,19 @@
             font-size: 0.9rem;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            .search-container {
+                order: 3;
+                max-width: 100%;
+                margin: 0.5rem 0 0;
+            }
             .menu-toggle {
                 display: block;
             }
-
             nav ul {
                 display: none;
                 position: absolute;
@@ -301,22 +356,30 @@
                 padding: 1rem;
                 gap: 0;
             }
-
             nav ul.show {
                 display: flex;
             }
-
             nav ul li {
                 padding: 0.75rem 0;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-
             .container {
                 padding: 0 1rem;
             }
-
             .article-preview, .article-full {
                 padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme-switch {
+                width: 50px;
+                height: 25px;
+            }
+            .slider:before {
+                width: 18px;
+                height: 18px;
+                transform: translateX(25px);
             }
         }
     </style>
@@ -325,6 +388,13 @@
     <header>
         <div class="nav-container">
             <div class="logo">ReinierTutoriales</div>
+            
+            <!-- Barra de Búsqueda Mejorada -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput">
+                <button class="search-button" aria-label="Buscar">🔍</button>
+            </div>
+            
             <button class="menu-toggle" aria-label="Menú">☰</button>
             <nav>
                 <ul>
@@ -342,19 +412,19 @@
         </div>
     </header>
 
-    <main class="container">
+    <main class="container" itemscope itemtype="https://schema.org/Blog">
         <!-- Vista de lista de artículos -->
         <div id="article-list" class="article-list">
-            <article class="article-preview" data-article="broadcom">
+            <article class="article-preview" data-article="broadcom" itemprop="blogPost" itemscope itemtype="https://schema.org/Article">
                 <div class="meta">
-                    <span>27 Marzo 2025</span>
+                    <time datetime="2025-03-27" itemprop="datePublished">27 Marzo 2025</time>
                     <span>·</span>
-                    <span>10 min lectura</span>
+                    <span itemprop="timeRequired">10 min lectura</span>
                 </div>
                 <span class="tag">macOS</span>
                 <span class="tag">Hackintosh</span>
-                <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
-                <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
+                <h2 itemprop="headline">Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia</h2>
+                <p itemprop="description">Activa WiFi/Bluetooth Broadcom en macOS 15 Sequoia con esta guía paso a paso.</p>
             </article>
         </div>
 
@@ -369,69 +439,7 @@
         <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Plantilla para el artículo Broadcom -->
-    <template id="broadcom-template">
-        <div class="meta">
-            <span>27 Marzo 2025</span>
-            <span>·</span>
-            <span>10 min lectura</span>
-        </div>
-        <span class="tag">macOS</span>
-        <span class="tag">Hackintosh</span>
-        <h2>Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</h2>
-        
-        <div class="article-content">
-            <p>Apple ha reintroducido soporte limitado para chips Broadcom en <strong>macOS 15 Sequoia</strong>. Esta guía completa te muestra cómo activar todas las funciones de WiFi y Bluetooth.</p>
-            
-            <h3>🛒 Hardware Recomendado</h3>
-            <ul>
-                <li><strong>FENVI T919</strong> (PCIe + Bluetooth integrado)</li>
-                <li><strong>BCM94360CD</strong> (Para laptops con adaptador NGFF)</li>
-            </ul>
-            
-            <h3>📦 Kexts Obligatorios</h3>
-            <h4>1. Paquete Básico</h4>
-            <pre><code># Descargar con un solo comando:
-curl -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IOSkywalkFamily-v1.1.0.zip \
-     -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IO80211FamilyLegacy-v1.0.0.zip \
-     -O https://github.com/dortania/build-repo/releases/download/AirportBrcmFixup-c85ca2d/AirportBrcmFixup-2.1.9-RELEASE.zip</code></pre>
-            
-            <h4>2. Lista Completa</h4>
-            <ul>
-                <li><strong>IOSkywalk.kext</strong> - Base para WiFi</li>
-                <li><strong>IO80211FamilyLegacy</strong> - Incluye AirPortBrcmNIC.kext</li>
-                <li><strong>AirportBrcmFixup</strong> - Requiere injector</li>
-                <li><strong>AMFIPass</strong> - Para SIP parcialmente desactivado</li>
-            </ul>
-            
-            <h3>⚙️ Configuración de OpenCore</h3>
-            <p>Edita tu config.plist con los siguientes ajustes:</p>
-            <pre><code>&lt;key&gt;Kernel&lt;/key&gt;
-&lt;dict&gt;
-    &lt;key&gt;Add&lt;/key&gt;
-    &lt;array&gt;
-        &lt;dict&gt;
-            &lt;key&gt;BundlePath&lt;/key&gt;
-            &lt;string&gt;IOSkywalk.kext&lt;/string&gt;
-            &lt;key&gt;Enabled&lt;/key&gt;
-            &lt;true/&gt;
-        &lt;/dict&gt;
-    &lt;/array&gt;
-&lt;/dict&gt;</code></pre>
-            
-            <h3>✅ Pasos Finales</h3>
-            <ol>
-                <li>Reinicia en modo Recovery</li>
-                <li>Ejecuta en Terminal: <code>nvram csr-active-config="%03%08%00%00"</code></li>
-                <li>Aplica parches con OpenCore Legacy Patcher</li>
-            </ol>
-            
-            <blockquote>
-                <p>⚠️ Importante: Requiere SIP parcialmente desactivado para funcionar correctamente.</p>
-            </blockquote>
-        </div>
-    </template>
-
+    <!-- Scripts -->
     <script>
         // Tema oscuro/claro
         const themeSwitch = document.getElementById('checkbox');
@@ -458,54 +466,78 @@ curl -O https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Ke
         // Año actual
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Sistema de navegación de artículos
+        // Sistema de navegación
         const articleList = document.getElementById('article-list');
         const articleFull = document.getElementById('article-full');
         const articleContent = document.getElementById('article-content');
         const backButton = document.querySelector('.back-button');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const searchInput = document.getElementById('searchInput');
 
-        // Mostrar artículo completo
-        document.querySelector('.article-preview').addEventListener('click', function() {
-            const template = document.getElementById('broadcom-template');
-            const clone = template.content.cloneNode(true);
-            
-            articleContent.innerHTML = '';
-            articleContent.appendChild(clone);
-            
-            articleList.style.display = 'none';
-            articleFull.style.display = 'block';
-            
-            // Scroll suave al principio del artículo
-            window.scrollTo({
-                top: articleFull.offsetTop - 20,
-                behavior: 'smooth'
-            });
-        });
+        // Cargar artículo Markdown
+        async function loadMarkdownArticle() {
+            try {
+                const response = await fetch('_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md');
+                if (!response.ok) throw new Error('Artículo no encontrado');
+                const markdown = await response.text();
 
-        // Volver a la lista de artículos
-        backButton.addEventListener('click', function() {
+                // Parsear front matter
+                const frontMatter = markdown.match(/---\n([\s\S]*?)\n---/)[1];
+                const content = markdown.split('---')[2].trim();
+
+                const getMetaValue = (meta, key) => meta.match(new RegExp(`${key}:\\s*(.*)`))[1].trim();
+                const title = getMetaValue(frontMatter, 'title').replace(/"/g, '');
+                const date = new Date(getMetaValue(frontMatter, 'date'));
+                const categories = getMetaValue(frontMatter, 'categories')
+                    .replace(/[\[\]]/g, '')
+                    .split(',')
+                    .map(cat => cat.trim());
+
+                // Calcular tiempo de lectura
+                const readingTime = Math.ceil(content.split(/\s+/).length / 200);
+
+                // Renderizar
+                articleContent.innerHTML = `
+                    <div class="meta">
+                        <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                        <span>·</span>
+                        <span>${readingTime} min lectura</span>
+                    </div>
+                    ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                    <h2>${title}</h2>
+                    <div class="markdown-content">${marked.parse(content)}</div>
+                `;
+
+                articleList.style.display = 'none';
+                articleFull.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error:', error);
+                articleContent.innerHTML = `
+                    <div class="error" style="color: var(--primary); text-align: center; padding: 2rem;">
+                        <p>⚠️ Error al cargar el artículo</p>
+                        <button class="back-button" onclick="window.location.reload()">Reintentar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Eventos
+        document.querySelector('.article-preview').addEventListener('click', loadMarkdownArticle);
+        backButton.addEventListener('click', () => {
             articleList.style.display = 'block';
             articleFull.style.display = 'none';
-            
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Navegación del menú
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const section = this.getAttribute('data-section');
-                
-                if (section === 'home') {
-                    articleList.style.display = 'block';
-                    articleFull.style.display = 'none';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-                // Puedes añadir más secciones aquí (hardware, guides)
+        // Búsqueda
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.article-preview').forEach(article => {
+                const title = article.querySelector('h2').textContent.toLowerCase();
+                const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                const matches = title.includes(term) || tags.some(tag => tag.includes(term));
+                article.style.display = matches ? 'block' : 'none';
             });
         });
     </script>
