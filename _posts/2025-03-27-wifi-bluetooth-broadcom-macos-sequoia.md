@@ -7,10 +7,6 @@ category: "guides"
 categories: ["macOS", "Hackintosh"]
 ---
 
-## Contenido del artículo
-
-![Chip Broadcom BCM94360](https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png)
-
 ¡Bienvenido al repositorio oficial de **ReinierTutoriales**! Esta guía te llevará paso a paso para habilitar soporte completo de tarjetas **Broadcom** (WiFi y Bluetooth) en **macOS 15 Sequoia**, ideal para usuarios de Hackintosh.  
 
 > **Créditos:** Todo esto es posible gracias al increíble trabajo de [👉 **OpenCore Legacy Patcher**](https://github.com/dortania/OpenCore-Legacy-Patcher/).
