@@ -11,7 +11,6 @@ permalink: /broadcom-macos-15-guia-completa/
 
 > **Créditos:** Todo esto es posible gracias al increíble trabajo de [👉 **OpenCore Legacy Patcher**](https://github.com/dortania/OpenCore-Legacy-Patcher/).
 
----
 
 ## 🛒 Dónde Comprar Hardware Compatible
 Aquí tienes las mejores opciones para adquirir tarjetas Broadcom compatibles:
@@ -21,14 +20,12 @@ Aquí tienes las mejores opciones para adquirir tarjetas Broadcom compatibles:
 - ✅ **BCM94360CD** *(Ideal para laptops con adaptador NGFF)*  
   [👉 Comprar en AliExpress](https://example.com/link)
 
----
 
 ## 🎥 Tutorial en Video
 ¡Mira el proceso en acción! Haz clic en la imagen para ver el video en YouTube:  
 
 [![Video de Ayuda](https://img.youtube.com/vi/ZIEt9QYUu0Y/0.jpg)](https://www.youtube.com/watch?v=ZIEt9QYUu0Y "Tutorial Broadcom en macOS 15")
 
----
 
 ## 💻 Kexts Necesarios para macOS 15 Sequoia
 Descarga e inyecta estos kexts en tu `config.plist` para habilitar todas las funciones:
@@ -56,7 +53,6 @@ Descarga e inyecta estos kexts en tu `config.plist` para habilitar todas las fun
    ![Orden de Kexts y MinKernel](IMG/orden-kexts-MinKernel.PNG "Orden correcto de kexts en config.plist")  
    - Añade `MinKernel` con valor `23.0.0` para compatibilidad con Sequoia.
 
----
 
 ## 🚫 Bloquear IOSkywalkFamily
 Para evitar conflictos con el kext nativo de macOS, bloquea `IOSkywalkFamily`:
@@ -105,7 +101,6 @@ Ajusta estas configuraciones en tu `config.plist` para un funcionamiento óptimo
      - `csr-active-config`  
      - `boot-args`
 
----
 
 ## ✅ Pasos Finales
 
@@ -116,7 +111,6 @@ Ajusta estas configuraciones en tu `config.plist` para un funcionamiento óptimo
 > ⚠️ **Importante:**  
 > Este soporte es posible gracias a proyectos como **[Dortania](https://dortania.github.io/OpenCore-Legacy-Patcher/INSTALLER.html)** y **[OpenCore Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/INSTALLER.html)**. Asegúrate de apoyar a la comunidad.
 
----
 
 ## 🌟 ¡Listo!
 
