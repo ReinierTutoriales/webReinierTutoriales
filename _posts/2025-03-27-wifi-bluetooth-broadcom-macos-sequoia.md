@@ -1,4 +1,11 @@
-![Portada Broadcom macOS 15](https://example.com/path/to/your/image.jpg)
+---
+layout: post
+title: "Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia"
+date: 2025-03-27
+categories: [macos, hackintosh, hardware]
+author: ReinierTutoriales
+permalink: /broadcom-macos-15-guia-completa/
+---
 
 # 🚀 Soporte para Broadcom WiFi y Bluetooth en macOS 15 Sequoia
 
