@@ -19,7 +19,7 @@ Apple ha reintroducido soporte limitado para chips Broadcom en macOS 15 Sequoia.
 - **BCM94360CD** (Para laptops con adaptador NGFF)  
   [▶ Comprar en AliExpress](https://example.com/link)
 
-## 📦 Kexts Requeridos
+## 📦 Kexts Requeridos 2024
 ### Paquete Esencial
 1. **IOSkywalk.kext**  
    [▼ Descargar v1.1.0](https://github.com/dortania/OpenCore-Legacy-Patcher/raw/main/payloads/Kexts/Wifi/IOSkywalkFamily-v1.1.0.zip)
