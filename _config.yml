@@ -1,0 +1,5 @@
+title: ReinierTutoriales
+description: Blog de tecnología y tutoriales
+baseurl: "/webReinierTutoriales"  # https://github.com/ReinierTutoriales
+url: "https://reinierTutoriales.github.io"
+theme: minima
