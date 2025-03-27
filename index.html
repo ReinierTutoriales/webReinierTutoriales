@@ -35,6 +35,7 @@
             --switch-circle: #ffffff;
             --code-bg: #f3f4f6;
             --code-border: #e5e7eb;
+            --new-badge: #ef4444;
         }
 
         [data-theme="dark"] {
@@ -49,6 +50,7 @@
             --switch-circle: #e2e8f0;
             --code-bg: #1e293b;
             --code-border: #334155;
+            --new-badge: #dc2626;
         }
 
         * {
@@ -282,6 +284,7 @@
         }
 
         .article-preview {
+            position: relative;
             display: flex;
             gap: 1.5rem;
             background-color: var(--card-bg);
@@ -345,6 +348,19 @@
             font-weight: 600;
             margin-right: 0.5rem;
             margin-bottom: 0.25rem;
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--new-badge);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 1;
         }
 
         /* Artículo completo */
@@ -534,6 +550,38 @@
             margin-top: 3rem;
         }
 
+        /* Notificación de nuevos artículos */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
         /* Transiciones para modo oscuro/claro */
         body,
         .slider,
@@ -562,6 +610,20 @@
             align-items: center;
             height: 200px;
             width: 100%;
+        }
+
+        /* Error message */
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .error-message h3 {
+            margin-bottom: 1rem;
+            color: var(--new-badge);
         }
 
         /* Responsive */
@@ -606,6 +668,11 @@
 
             .featured-image {
                 max-height: 250px;
+            }
+
+            .new-badge {
+                top: 0.5rem;
+                right: 0.5rem;
             }
         }
 
@@ -691,16 +758,28 @@
         </div>
     </main>
 
+    <!-- Notificación de nuevos artículos -->
+    <div id="notification" class="notification">
+        <span id="notification-message"></span>
+        <button class="notification-close" aria-label="Cerrar notificación">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
     <footer>
         <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
 
     <script>
-        // Configuración del blog
+        // Configuración del blog - ACTUALIZADA
         const BLOG_CONFIG = {
             postsUrl: 'https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts',
             assetsUrl: 'https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/',
-            defaultImage: 'default-article-image.jpg'
+            defaultImage: 'default-article-image.jpg',
+            // Opcional: Agrega tu token de GitHub para aumentar el límite de solicitudes
+            // githubToken: 'tu_token_aqui',
+            cacheExpiration: 60 * 60 * 1000, // 1 hora en milisegundos
+            newArticleThreshold: 7 // Días para considerar un artículo como "Nuevo"
         };
 
         // Sistema de tema
@@ -732,9 +811,6 @@
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
             menuToggle.setAttribute('aria-expanded', !isExpanded);
             mobileMenu.classList.toggle('show');
-            
-            // Animación del icono hamburguesa a X
-            menuToggle.classList.toggle('active');
         };
         
         menuToggle.addEventListener('click', toggleMenu);
@@ -788,11 +864,71 @@
             return Math.max(1, Math.ceil(wordCount / 200)); // 200 palabras por minuto
         };
 
-        // Función para cargar la lista de artículos
+        // Función para verificar si un artículo es nuevo (últimos 7 días)
+        const isArticleNew = (dateString) => {
+            const articleDate = new Date(dateString);
+            const today = new Date();
+            const diffTime = today - articleDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays <= BLOG_CONFIG.newArticleThreshold;
+        };
+
+        // Función para mostrar notificación
+        const showNotification = (message) => {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            // Cerrar automáticamente después de 5 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+            
+            // Cerrar manualmente
+            document.querySelector('.notification-close').addEventListener('click', () => {
+                notification.classList.remove('show');
+            });
+        };
+
+        // Función para guardar en caché
+        const saveToCache = (key, data) => {
+            const cacheData = {
+                timestamp: Date.now(),
+                data: data
+            };
+            localStorage.setItem(key, JSON.stringify(cacheData));
+        };
+
+        // Función para obtener de caché
+        const getFromCache = (key) => {
+            const cachedData = localStorage.getItem(key);
+            if (!cachedData) return null;
+            
+            const parsedData = JSON.parse(cachedData);
+            const isExpired = Date.now() - parsedData.timestamp > BLOG_CONFIG.cacheExpiration;
+            
+            return isExpired ? null : parsedData.data;
+        };
+
+        // Función para cargar la lista de artículos - ACTUALIZADA
         const loadArticleList = async () => {
             try {
-                const response = await fetch(BLOG_CONFIG.postsUrl);
-                if (!response.ok) throw new Error('Error al cargar artículos');
+                // Verificar caché primero
+                const cachedArticles = getFromCache('articles');
+                if (cachedArticles) {
+                    renderArticles(cachedArticles);
+                    return;
+                }
+                
+                const headers = {};
+                if (BLOG_CONFIG.githubToken) {
+                    headers['Authorization'] = `token ${BLOG_CONFIG.githubToken}`;
+                }
+                
+                const response = await fetch(BLOG_CONFIG.postsUrl, { headers });
+                if (!response.ok) throw new Error(`Error al cargar artículos: ${response.status}`);
                 
                 const files = await response.json();
                 const markdownFiles = files.filter(file => file.name.endsWith('.md'));
@@ -803,59 +939,111 @@
                     return {
                         ...metadata,
                         download_url: file.download_url,
-                        name: file.name
+                        name: file.name,
+                        isNew: isArticleNew(metadata.date)
                     };
                 }));
                 
                 articles.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
-                const articleList = document.getElementById('article-list');
-                articleList.innerHTML = '';
+                // Guardar en caché
+                saveToCache('articles', articles);
                 
-                articles.forEach(article => {
-                    const imageUrl = article.image || BLOG_CONFIG.assetsUrl + BLOG_CONFIG.defaultImage;
-                    const articleElement = document.createElement('article');
-                    articleElement.className = 'article-preview';
-                    articleElement.setAttribute('data-markdown-path', article.download_url);
-                    articleElement.setAttribute('data-category', article.category || 'guides');
-                    articleElement.setAttribute('data-image-url', imageUrl);
-                    
-                    articleElement.innerHTML = `
-                        <div class="article-image-container">
-                            <img src="${imageUrl}" alt="${article.title}" class="article-image" loading="lazy">
-                        </div>
-                        <div class="article-text">
-                            <div class="meta">
-                                <time datetime="${article.date}">${formatDate(article.date)}</time>
-                                <span>·</span>
-                                <span>${article.readingTime} min lectura</span>
-                            </div>
-                            ${article.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
-                            <h2>${article.title}</h2>
-                            <p>${article.description || 'Lee este interesante artículo'}</p>
-                        </div>
-                    `;
-                    
-                    articleElement.addEventListener('click', () => loadMarkdownArticle(articleElement));
-                    articleList.appendChild(articleElement);
-                });
+                // Renderizar artículos
+                renderArticles(articles);
                 
-                // Inicializar búsqueda después de cargar los artículos
-                initSearch();
             } catch (error) {
                 console.error('Error loading articles:', error);
-                document.getElementById('article-list').innerHTML = `
+                showError('articles', error);
+            }
+        };
+
+        // Función para renderizar artículos
+        const renderArticles = (articles) => {
+            const articleList = document.getElementById('article-list');
+            articleList.innerHTML = '';
+            
+            if (articles.length === 0) {
+                articleList.innerHTML = `
                     <div class="error-message">
-                        <p>⚠️ Error al cargar los artículos. Por favor, inténtalo de nuevo más tarde.</p>
-                        <button class="back-button" onclick="window.location.reload()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
-                            </svg>
-                            <span>Reintentar</span>
-                        </button>
+                        <h3>No hay artículos disponibles</h3>
+                        <p>No se encontraron artículos para mostrar.</p>
                     </div>
                 `;
+                return;
             }
+            
+            articles.forEach(article => {
+                const imageUrl = article.image || BLOG_CONFIG.assetsUrl + BLOG_CONFIG.defaultImage;
+                const articleElement = document.createElement('article');
+                articleElement.className = 'article-preview';
+                articleElement.setAttribute('data-markdown-path', article.download_url);
+                articleElement.setAttribute('data-category', article.category || 'guides');
+                articleElement.setAttribute('data-image-url', imageUrl);
+                
+                let newBadge = '';
+                if (article.isNew) {
+                    newBadge = '<span class="new-badge">NUEVO</span>';
+                }
+                
+                articleElement.innerHTML = `
+                    ${newBadge}
+                    <div class="article-image-container">
+                        <img src="${imageUrl}" alt="${article.title}" class="article-image" loading="lazy">
+                    </div>
+                    <div class="article-text">
+                        <div class="meta">
+                            <time datetime="${article.date}">${formatDate(article.date)}</time>
+                            <span>·</span>
+                            <span>${article.readingTime} min lectura</span>
+                        </div>
+                        ${article.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                        <h2>${article.title}</h2>
+                        <p>${article.description || 'Lee este interesante artículo'}</p>
+                    </div>
+                `;
+                
+                articleElement.addEventListener('click', () => loadMarkdownArticle(articleElement));
+                articleList.appendChild(articleElement);
+            });
+            
+            // Inicializar búsqueda después de cargar los artículos
+            initSearch();
+            
+            // Verificar si hay nuevos artículos desde la última visita
+            checkNewArticlesSinceLastVisit(articles);
+        };
+
+        // Función para verificar nuevos artículos desde la última visita
+        const checkNewArticlesSinceLastVisit = (articles) => {
+            const lastVisit = localStorage.getItem('lastVisit');
+            const newArticles = articles.filter(article => {
+                if (!lastVisit) return false;
+                return new Date(article.date) > new Date(lastVisit);
+            });
+            
+            if (newArticles.length > 0) {
+                showNotification(`¡Hay ${newArticles.length} artículo(s) nuevo(s) desde tu última visita!`);
+            }
+            
+            // Actualizar fecha de última visita
+            localStorage.setItem('lastVisit', new Date().toISOString());
+        };
+
+        // Función para mostrar errores
+        const showError = (elementId, error) => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            element.innerHTML = `
+                <div class="error-message">
+                    <h3>😕 No se pudieron cargar los artículos</h3>
+                    <p>${error.message || 'Error desconocido'}</p>
+                    <button class="back-button" onclick="window.location.reload()" style="margin-top: 1rem;">
+                        <i class="fas fa-sync-alt"></i> Intentar nuevamente
+                    </button>
+                </div>
+            `;
         };
 
         // Función para extraer metadatos del artículo
@@ -910,13 +1098,20 @@
             }
         };
 
-        // Cargar artículo Markdown
+        // Cargar artículo Markdown - ACTUALIZADA
         const loadMarkdownArticle = async (articleElement) => {
             try {
                 const markdownPath = articleElement.getAttribute('data-markdown-path');
                 const imageUrl = articleElement.getAttribute('data-image-url');
-                const response = await fetch(markdownPath);
                 
+                // Verificar caché primero
+                const cachedArticle = getFromCache(`article-${markdownPath}`);
+                if (cachedArticle) {
+                    renderArticleContent(cachedArticle, imageUrl);
+                    return;
+                }
+                
+                const response = await fetch(markdownPath);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const markdownContent = await response.text();
                 
@@ -953,65 +1148,82 @@
                     return `<div class="code-block-wrapper"><pre class="code-block">${code}</pre></div>`;
                 });
                 
-                // Renderizar artículo con imagen destacada y botones de compartir
-                document.getElementById('article-content').innerHTML = `
-                    <div class="meta">
-                        <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                        <span>·</span>
-                        <span>${readingTime} min lectura</span>
-                    </div>
-                    ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
-                    <h1>${title}</h1>
-                    
-                    <img src="${imageUrl}" alt="${title}" class="featured-image">
-                    
-                    <div class="share-buttons">
-                        <a href="https://twitter.com/intent/tweet?url=${currentUrl}&text=${shareTitle}" class="share-button twitter" target="_blank" rel="noopener">
-                            <i class="fab fa-twitter"></i>
-                            <span class="text">Twitter</span>
-                        </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=${currentUrl}" class="share-button facebook" target="_blank" rel="noopener">
-                            <i class="fab fa-facebook-f"></i>
-                            <span class="text">Facebook</span>
-                        </a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${currentUrl}&title=${shareTitle}" class="share-button linkedin" target="_blank" rel="noopener">
-                            <i class="fab fa-linkedin-in"></i>
-                            <span class="text">LinkedIn</span>
-                        </a>
-                        <a href="https://wa.me/?text=${shareTitle}%20${currentUrl}" class="share-button whatsapp" target="_blank" rel="noopener">
-                            <i class="fab fa-whatsapp"></i>
-                            <span class="text">WhatsApp</span>
-                        </a>
-                        <a href="https://t.me/share/url?url=${currentUrl}&text=${shareTitle}" class="share-button telegram" target="_blank" rel="noopener">
-                            <i class="fab fa-telegram-plane"></i>
-                            <span class="text">Telegram</span>
-                        </a>
-                    </div>
-                    
-                    <div class="markdown-content">${processedContent}</div>
-                `;
+                // Crear objeto de artículo para caché
+                const articleData = {
+                    title,
+                    date,
+                    categories,
+                    readingTime,
+                    currentUrl,
+                    shareTitle,
+                    processedContent
+                };
                 
-                // Agregar botones de copiar a los bloques de código
-                addCopyButtons();
+                // Guardar en caché
+                saveToCache(`article-${markdownPath}`, articleData);
                 
-                document.getElementById('article-list').style.display = 'none';
-                document.getElementById('article-full').style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Renderizar contenido
+                renderArticleContent(articleData, imageUrl);
                 
             } catch (error) {
                 console.error("Error cargando el artículo:", error);
                 document.getElementById('article-content').innerHTML = `
                     <div class="error-message">
-                        <p>⚠️ Error al cargar el artículo. Por favor, inténtalo de nuevo.</p>
+                        <h3>Error al cargar el artículo</h3>
+                        <p>${error.message || 'Intenta nuevamente más tarde'}</p>
                         <button class="back-button" onclick="window.location.reload()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
-                            </svg>
-                            <span>Reintentar</span>
+                            <i class="fas fa-sync-alt"></i> Reintentar
                         </button>
                     </div>
                 `;
             }
+        };
+
+        // Función para renderizar contenido del artículo
+        const renderArticleContent = (articleData, imageUrl) => {
+            document.getElementById('article-content').innerHTML = `
+                <div class="meta">
+                    <span>${articleData.date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    <span>·</span>
+                    <span>${articleData.readingTime} min lectura</span>
+                </div>
+                ${articleData.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                <h1>${articleData.title}</h1>
+                
+                <img src="${imageUrl}" alt="${articleData.title}" class="featured-image">
+                
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?url=${articleData.currentUrl}&text=${articleData.shareTitle}" class="share-button twitter" target="_blank" rel="noopener">
+                        <i class="fab fa-twitter"></i>
+                        <span class="text">Twitter</span>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${articleData.currentUrl}" class="share-button facebook" target="_blank" rel="noopener">
+                        <i class="fab fa-facebook-f"></i>
+                        <span class="text">Facebook</span>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=${articleData.currentUrl}&title=${articleData.shareTitle}" class="share-button linkedin" target="_blank" rel="noopener">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span class="text">LinkedIn</span>
+                    </a>
+                    <a href="https://wa.me/?text=${articleData.shareTitle}%20${articleData.currentUrl}" class="share-button whatsapp" target="_blank" rel="noopener">
+                        <i class="fab fa-whatsapp"></i>
+                        <span class="text">WhatsApp</span>
+                    </a>
+                    <a href="https://t.me/share/url?url=${articleData.currentUrl}&text=${articleData.shareTitle}" class="share-button telegram" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span class="text">Telegram</span>
+                    </a>
+                </div>
+                
+                <div class="markdown-content">${articleData.processedContent}</div>
+            `;
+            
+            // Agregar botones de copiar a los bloques de código
+            addCopyButtons();
+            
+            document.getElementById('article-list').style.display = 'none';
+            document.getElementById('article-full').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
         // Navegación por categorías
@@ -1060,6 +1272,33 @@
             });
         };
 
+        // Verificar nuevos artículos periódicamente
+        const checkForNewArticles = () => {
+            // Verifica cada 5 minutos (300000 ms)
+            setInterval(async () => {
+                try {
+                    const headers = {};
+                    if (BLOG_CONFIG.githubToken) {
+                        headers['Authorization'] = `token ${BLOG_CONFIG.githubToken}`;
+                    }
+                    
+                    const response = await fetch(BLOG_CONFIG.postsUrl, { headers });
+                    if (!response.ok) throw new Error('Error al verificar nuevos artículos');
+                    
+                    const files = await response.json();
+                    const currentCount = document.querySelectorAll('.article-preview').length;
+                    
+                    if (files.length > currentCount) {
+                        // Hay nuevos artículos, recargar la lista
+                        loadArticleList();
+                        showNotification(`¡Hay ${files.length - currentCount} artículo(s) nuevo(s)!`);
+                    }
+                } catch (error) {
+                    console.log('Error verificando nuevos artículos:', error);
+                }
+            }, 300000); // 5 minutos
+        };
+
         // Eventos de navegación
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1088,6 +1327,7 @@
         // Al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
             loadArticleList();
+            checkForNewArticles();
         });
     </script>
 </body>
