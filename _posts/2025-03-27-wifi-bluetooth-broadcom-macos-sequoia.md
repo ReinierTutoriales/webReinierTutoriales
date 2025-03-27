@@ -80,7 +80,8 @@ Para evitar conflictos con el kext nativo de macOS, bloquea `IOSkywalkFamily`:
        <string>Exclude</string>
    </dict>
 
-   ## ⚙️ Configuraciones Adicionales
+
+## ⚙️ Configuraciones Adicionales
 
 Ajusta estas configuraciones en tu `config.plist` para un funcionamiento óptimo:
 
