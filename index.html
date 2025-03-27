@@ -14,7 +14,7 @@
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --bg: #ffffff;
-            --text: #1a1a1a;  /* Texto oscuro para mejor contraste */
+            --text: #1a1a1a;
             --card-bg: #f8fafc;
             --border: #e2e8f0;
             --text-soft: #4b5563;
@@ -27,7 +27,7 @@
             --primary: #3b82f6;
             --primary-dark: #60a5fa;
             --bg: #0f172a;
-            --text: #f8fafc;  /* Texto claro para mejor legibilidad */
+            --text: #f8fafc;
             --card-bg: #1e293b;
             --border: #334155;
             --text-soft: #94a3b8;
@@ -50,7 +50,6 @@
             min-height: 100vh;
         }
 
-        /* Header mejorado */
         header {
             background: var(--primary);
             color: white;
@@ -75,7 +74,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Menú desplegable mobile */
         .menu-toggle {
             display: none;
             background: none;
@@ -115,7 +113,6 @@
             width: 100%;
         }
 
-        /* Switch moderno */
         .theme-switch {
             position: relative;
             display: inline-block;
@@ -162,14 +159,12 @@
             transform: translateX(30px);
         }
 
-        /* Contenido centrado */
         .container {
-            max-width: 800px;  /* Más estrecho para mejor lectura */
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
-        /* Artículos optimizados */
         .article {
             background: var(--card-bg);
             border-radius: 12px;
@@ -211,7 +206,6 @@
             margin-right: 0.5rem;
         }
 
-        /* Footer */
         footer {
             background: var(--primary);
             color: white;
@@ -221,7 +215,22 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive */
+        .read-more {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 1rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .read-more:hover {
+            background: var(--primary-dark);
+        }
+
         @media (max-width: 768px) {
             .menu-toggle {
                 display: block;
@@ -282,19 +291,30 @@
     </header>
 
     <main class="container">
-        
         <article class="article">
             <div class="meta">
                 <span>27 Marzo 2025</span>
                 <span>·</span>
                 <span>10 min lectura</span>
             </div>
-            <span class="tag">macOSl</span>
+            <span class="tag">macOS</span>
             <span class="tag">Hackintosh</span>
             <h2><a href="/broadcom-macos15-soporte/">Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</a></h2>
             <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
-            a href="/broadcom-macos15-soporte/" class="read-more">Leer artículo completo →</a>
-    </article>
+            <a href="/broadcom-macos15-soporte/" class="read-more">Leer artículo completo →</a>
+        </article>
+
+        <article class="article">
+            <div class="meta">
+                <span>10 Junio 2023</span>
+                <span>·</span>
+                <span>8 min lectura</span>
+            </div>
+            <span class="tag">Inteligencia Artificial</span>
+            <h2><a href="#">Cómo GPT-5 está revolucionando el desarrollo web</a></h2>
+            <p>Exploramos las nuevas capacidades de los modelos de lenguaje y cómo integrarlos en tus proyectos...</p>
+            <a href="#" class="read-more">Leer artículo completo →</a>
+        </article>
 
         <article class="article">
             <div class="meta">
@@ -303,8 +323,9 @@
                 <span>5 min lectura</span>
             </div>
             <span class="tag">JavaScript</span>
-            <h2>Next.js 14: Las mejores características</h2>
+            <h2><a href="#">Next.js 14: Las mejores características</a></h2>
             <p>Descubre cómo el nuevo framework está cambiando el desarrollo frontend...</p>
+            <a href="#" class="read-more">Leer artículo completo →</a>
         </article>
     </main>
 
