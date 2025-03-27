@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReinierTutoriales | Tecnología y Desarrollo</title>
-    <!-- Fuentes optimizadas -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Tema claro (default) */
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --bg: #ffffff;
@@ -23,7 +21,6 @@
         }
 
         [data-theme="dark"] {
-            /* Tema oscuro */
             --primary: #3b82f6;
             --primary-dark: #60a5fa;
             --bg: #0f172a;
@@ -275,10 +272,8 @@
             <nav>
                 <ul>
                     <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Programación</a></li>
-                    <li><a href="#">IA</a></li>
                     <li><a href="#">Hardware</a></li>
-                    <li><a href="#">Cursos</a></li>
+                    <li><a href="#">Guías</a></li>
                 </ul>
             </nav>
             <div class="theme-switch-wrapper">
@@ -299,33 +294,9 @@
             </div>
             <span class="tag">macOS</span>
             <span class="tag">Hackintosh</span>
-            <h2><a href="/broadcom-macos15-soporte/">Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</a></h2>
+            <h2><a href="https://github.com/ReinierTutoriales/webReinierTutoriales/blob/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md">Soporte para WiFi y Bluetooth Broadcom en macOS 15 Sequoia</a></h2>
             <p>Guía completa para activar WiFi/Bluetooth Broadcom en macOS 15 Sequoia, incluyendo kexts necesarios y configuración de OpenCore.</p>
-            <a href="/broadcom-macos15-soporte/" class="read-more">Leer artículo completo →</a>
-        </article>
-
-        <article class="article">
-            <div class="meta">
-                <span>10 Junio 2023</span>
-                <span>·</span>
-                <span>8 min lectura</span>
-            </div>
-            <span class="tag">Inteligencia Artificial</span>
-            <h2><a href="#">Cómo GPT-5 está revolucionando el desarrollo web</a></h2>
-            <p>Exploramos las nuevas capacidades de los modelos de lenguaje y cómo integrarlos en tus proyectos...</p>
-            <a href="#" class="read-more">Leer artículo completo →</a>
-        </article>
-
-        <article class="article">
-            <div class="meta">
-                <span>5 Junio 2023</span>
-                <span>·</span>
-                <span>5 min lectura</span>
-            </div>
-            <span class="tag">JavaScript</span>
-            <h2><a href="#">Next.js 14: Las mejores características</a></h2>
-            <p>Descubre cómo el nuevo framework está cambiando el desarrollo frontend...</p>
-            <a href="#" class="read-more">Leer artículo completo →</a>
+            <a href="https://github.com/ReinierTutoriales/webReinierTutoriales/blob/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md" class="read-more">Leer artículo completo →</a>
         </article>
     </main>
 
@@ -338,13 +309,11 @@
         const themeSwitch = document.getElementById('checkbox');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-        // Detección inicial del tema
         if (prefersDarkScheme.matches) {
             document.documentElement.setAttribute('data-theme', 'dark');
             themeSwitch.checked = true;
         }
 
-        // Cambio manual con switch
         themeSwitch.addEventListener('change', () => {
             const newTheme = themeSwitch.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
