@@ -541,6 +541,29 @@
             transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
         }
 
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            width: 100%;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-container {
@@ -651,28 +674,9 @@
     <main class="container">
         <!-- Vista de lista de artículos -->
         <div id="article-list" class="article-list">
-            <article class="article-preview" 
-                     data-markdown-path="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md"
-                     data-category="guides"
-                     data-image-url="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png">
-                <div class="article-image-container">
-                    <img src="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png" 
-                         alt="Chip Broadcom BCM94360" 
-                         class="article-image"
-                         loading="lazy">
-                </div>
-                <div class="article-text">
-                    <div class="meta">
-                        <time datetime="2025-03-27">27 Marzo 2025</time>
-                        <span>·</span>
-                        <span>10 min lectura</span>
-                    </div>
-                    <span class="tag">macOS</span>
-                    <span class="tag">Hackintosh</span>
-                    <h2>Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia</h2>
-                    <p>Activa WiFi/Bluetooth Broadcom en macOS 15 Sequoia con esta guía paso a paso.</p>
-                </div>
-            </article>
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+            </div>
         </div>
 
         <!-- Vista de artículo completo -->
@@ -692,6 +696,13 @@
     </footer>
 
     <script>
+        // Configuración del blog
+        const BLOG_CONFIG = {
+            postsUrl: 'https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts',
+            assetsUrl: 'https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/',
+            defaultImage: 'default-article-image.jpg'
+        };
+
         // Sistema de tema
         const themeToggle = document.getElementById('themeToggle');
         const setTheme = (isDark) => {
@@ -763,6 +774,140 @@
                 
                 wrapper.appendChild(copyButton);
             });
+        };
+
+        // Función para formatear fechas
+        const formatDate = (dateString) => {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('es-ES', options);
+        };
+
+        // Función para calcular tiempo de lectura
+        const calculateReadingTime = (content) => {
+            const wordCount = content.split(/\s+/).length;
+            return Math.max(1, Math.ceil(wordCount / 200)); // 200 palabras por minuto
+        };
+
+        // Función para cargar la lista de artículos
+        const loadArticleList = async () => {
+            try {
+                const response = await fetch(BLOG_CONFIG.postsUrl);
+                if (!response.ok) throw new Error('Error al cargar artículos');
+                
+                const files = await response.json();
+                const markdownFiles = files.filter(file => file.name.endsWith('.md'));
+                
+                // Ordenar artículos por fecha (más recientes primero)
+                const articles = await Promise.all(markdownFiles.map(async file => {
+                    const metadata = await parseArticleMetadata(file.download_url);
+                    return {
+                        ...metadata,
+                        download_url: file.download_url,
+                        name: file.name
+                    };
+                }));
+                
+                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const articleList = document.getElementById('article-list');
+                articleList.innerHTML = '';
+                
+                articles.forEach(article => {
+                    const imageUrl = article.image || BLOG_CONFIG.assetsUrl + BLOG_CONFIG.defaultImage;
+                    const articleElement = document.createElement('article');
+                    articleElement.className = 'article-preview';
+                    articleElement.setAttribute('data-markdown-path', article.download_url);
+                    articleElement.setAttribute('data-category', article.category || 'guides');
+                    articleElement.setAttribute('data-image-url', imageUrl);
+                    
+                    articleElement.innerHTML = `
+                        <div class="article-image-container">
+                            <img src="${imageUrl}" alt="${article.title}" class="article-image" loading="lazy">
+                        </div>
+                        <div class="article-text">
+                            <div class="meta">
+                                <time datetime="${article.date}">${formatDate(article.date)}</time>
+                                <span>·</span>
+                                <span>${article.readingTime} min lectura</span>
+                            </div>
+                            ${article.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                            <h2>${article.title}</h2>
+                            <p>${article.description || 'Lee este interesante artículo'}</p>
+                        </div>
+                    `;
+                    
+                    articleElement.addEventListener('click', () => loadMarkdownArticle(articleElement));
+                    articleList.appendChild(articleElement);
+                });
+                
+                // Inicializar búsqueda después de cargar los artículos
+                initSearch();
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                document.getElementById('article-list').innerHTML = `
+                    <div class="error-message">
+                        <p>⚠️ Error al cargar los artículos. Por favor, inténtalo de nuevo más tarde.</p>
+                        <button class="back-button" onclick="window.location.reload()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
+                            </svg>
+                            <span>Reintentar</span>
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        // Función para extraer metadatos del artículo
+        const parseArticleMetadata = async (markdownUrl) => {
+            try {
+                const response = await fetch(markdownUrl);
+                if (!response.ok) throw new Error('Error al cargar artículo');
+                
+                const markdownContent = await response.text();
+                const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/);
+                
+                if (!frontMatter) {
+                    throw new Error('No se encontró front matter en el artículo');
+                }
+                
+                const content = markdownContent.split('---')[2].trim();
+                
+                const getMetaValue = (key) => {
+                    const match = frontMatter[1].match(new RegExp(`${key}:\\s*(.*)`));
+                    return match ? match[1].trim().replace(/"/g, '') : '';
+                };
+                
+                const title = getMetaValue('title') || 'Artículo sin título';
+                const date = getMetaValue('date') || new Date().toISOString();
+                const description = getMetaValue('description') || '';
+                const image = getMetaValue('image') || '';
+                const category = getMetaValue('category') || 'guides';
+                
+                let categories = ['General'];
+                const categoriesMatch = getMetaValue('categories');
+                if (categoriesMatch) {
+                    categories = categoriesMatch.replace(/[\[\]]/g, '').split(',').map(cat => cat.trim());
+                }
+                
+                return {
+                    title,
+                    date,
+                    description,
+                    image,
+                    category,
+                    categories,
+                    readingTime: calculateReadingTime(content)
+                };
+            } catch (error) {
+                console.error('Error parsing metadata:', error);
+                return {
+                    title: 'Artículo',
+                    date: new Date().toISOString(),
+                    categories: ['General'],
+                    readingTime: 5
+                };
+            }
         };
 
         // Cargar artículo Markdown
@@ -885,7 +1030,37 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // Eventos
+        // Inicializar búsqueda
+        const initSearch = () => {
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+            
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const term = searchInput.value.trim().toLowerCase();
+                    
+                    if (term === '') {
+                        filterArticles('home');
+                        return;
+                    }
+                    
+                    document.querySelectorAll('.article-preview').forEach(article => {
+                        const title = article.querySelector('h2').textContent.toLowerCase();
+                        const description = article.querySelector('p').textContent.toLowerCase();
+                        const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                        
+                        const matches = title.includes(term) || 
+                                      description.includes(term) || 
+                                      tags.some(tag => tag.includes(term));
+                        
+                        article.style.display = matches ? 'flex' : 'none';
+                    });
+                }, 300);
+            });
+        };
+
+        // Eventos de navegación
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -894,40 +1069,8 @@
             });
         });
 
-        document.querySelector('.article-preview').addEventListener('click', function() {
-            loadMarkdownArticle(this);
-        });
-
         document.querySelector('.back-button').addEventListener('click', function() {
             filterArticles('home');
-        });
-
-        // Búsqueda optimizada
-        const searchInput = document.getElementById('searchInput');
-        let searchTimeout;
-        
-        searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const term = searchInput.value.trim().toLowerCase();
-                
-                if (term === '') {
-                    filterArticles('home');
-                    return;
-                }
-                
-                document.querySelectorAll('.article-preview').forEach(article => {
-                    const title = article.querySelector('h2').textContent.toLowerCase();
-                    const description = article.querySelector('p').textContent.toLowerCase();
-                    const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
-                    
-                    const matches = title.includes(term) || 
-                                  description.includes(term) || 
-                                  tags.some(tag => tag.includes(term));
-                    
-                    article.style.display = matches ? 'flex' : 'none';
-                });
-            }, 300);
         });
 
         // Año actual
@@ -941,6 +1084,11 @@
                 });
             });
         }
+
+        // Al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticleList();
+        });
     </script>
 </body>
 </html>
