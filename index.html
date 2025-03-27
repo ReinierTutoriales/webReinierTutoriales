@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReinierTutoriales | Tecnología y Desarrollo</title>
-    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo">
+    <title>ReinierTutoriales | Tutoriales de Tecnología y Desarrollo</title>
+    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo con guías paso a paso">
+    <meta name="keywords" content="Hackintosh, macOS, Broadcom, OpenCore, WiFi, Bluetooth, tutoriales tecnología">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="ReinierTutoriales | Tutoriales Profesionales">
+    <meta property="og:description" content="Aprende con tutoriales técnicos sobre Hackintosh y desarrollo de software">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reiniertutoriales.github.io/webReinierTutoriales/">
+    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/assets/img/og-preview.jpg">
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Fuentes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <!-- Preload de fuentes -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"></noscript>
     <!-- Marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -42,15 +49,16 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -76,24 +84,32 @@
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
-        /* Barra de búsqueda */
+        /* Barra de búsqueda optimizada */
         .search-container {
             position: relative;
-            margin-left: auto;
             flex: 1;
-            max-width: 300px;
+            max-width: 400px;
+            margin-left: auto;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.5rem 2rem 0.5rem 1rem;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            font-family: inherit;
+            font: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
         }
 
         .search-input::placeholder {
@@ -107,16 +123,18 @@
             transform: translateY(-50%);
             color: white;
             pointer-events: none;
+            width: 20px;
+            height: 20px;
         }
 
-        /* Menú de navegación */
-        nav ul {
+        /* Menú de navegación - Escritorio */
+        .desktop-menu {
             display: flex;
             list-style: none;
             gap: 1.5rem;
         }
 
-        nav ul li a {
+        .desktop-menu li a {
             color: white;
             text-decoration: none;
             font-weight: 500;
@@ -124,7 +142,7 @@
             position: relative;
         }
 
-        nav ul li a::after {
+        .desktop-menu li a::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -132,20 +150,75 @@
             width: 0;
             height: 2px;
             background: white;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
 
-        nav ul li a:hover::after {
+        .desktop-menu li a:hover::after {
             width: 100%;
         }
 
-        /* Selector de tema */
+        /* Menú móvil - Oculto por defecto */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: var(--primary-dark);
+            list-style: none;
+            padding: 1rem;
+            z-index: 999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.show {
+            display: block;
+        }
+
+        .mobile-menu li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+        }
+
+        /* Botón menú móvil - Oculto por defecto */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: auto;
+        }
+
+        .menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Selector de tema optimizado */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 1rem;
+        }
+
         .theme-switch {
             position: relative;
             display: inline-block;
             width: 50px;
             height: 24px;
-            margin-left: 1rem;
         }
 
         .theme-switch input {
@@ -191,9 +264,14 @@
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1.5rem;
+            flex: 1;
         }
 
-        /* Artículos */
+        /* Artículos - Lista */
+        .article-list {
+            display: block;
+        }
+
         .article-preview {
             display: flex;
             gap: 1.5rem;
@@ -203,7 +281,7 @@
             margin-bottom: 1.5rem;
             border: 1px solid var(--border);
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .article-preview:hover {
@@ -214,9 +292,8 @@
         .article-image-container {
             flex: 0 0 200px;
             height: 150px;
-            position: relative;
-            overflow: hidden;
             border-radius: 8px;
+            overflow: hidden;
             border: 1px solid var(--border);
         }
 
@@ -224,7 +301,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
 
         .article-preview:hover .article-image {
@@ -238,7 +315,7 @@
         .meta {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-size: 0.875rem;
             color: var(--text-soft);
         }
@@ -254,7 +331,7 @@
             margin-right: 0.5rem;
         }
 
-        /* Vista de artículo completo */
+        /* Artículo completo */
         .article-full {
             display: none;
             background-color: var(--card-bg);
@@ -274,10 +351,10 @@
             border-radius: 6px;
             border: none;
             cursor: pointer;
-            font-family: inherit;
+            font: inherit;
             font-weight: 500;
             margin-bottom: 1.5rem;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
 
         .back-button:hover {
@@ -288,12 +365,37 @@
             line-height: 1.7;
         }
 
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4 {
+            margin: 1.5rem 0 1rem;
+            color: var(--text);
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+
         .markdown-content img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
             margin: 1.5rem 0;
             border: 1px solid var(--border);
+        }
+
+        .markdown-content pre {
+            background-color: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .markdown-content code {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
         }
 
         /* Footer */
@@ -305,6 +407,13 @@
             margin-top: 3rem;
         }
 
+        /* Transiciones para modo oscuro/claro */
+        body,
+        .slider,
+        .slider:before {
+            transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-container {
@@ -312,10 +421,23 @@
                 gap: 1rem;
             }
             
-            .search-container {
+            .desktop-menu {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
                 order: 1;
+            }
+            
+            .search-container {
+                order: 2;
                 min-width: 100%;
                 margin: 0.5rem 0 0;
+            }
+            
+            .theme-switch-wrapper {
+                margin-left: auto;
             }
             
             .article-preview {
@@ -323,25 +445,15 @@
             }
             
             .article-image-container {
-                flex: 0 0 auto;
                 width: 100%;
-                height: 200px;
+                height: auto;
+                max-height: 200px;
             }
-            
-            nav ul {
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            nav ul.show {
-                display: flex;
-            }
-            
-            nav ul li {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
             }
         }
     </style>
@@ -353,13 +465,15 @@
             
             <!-- Barra de búsqueda -->
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput">
-                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput" aria-label="Buscar tutoriales">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
             </div>
             
-            <!-- Menú de navegación -->
+            <!-- Menú de escritorio -->
             <nav>
-                <ul id="mainMenu">
+                <ul class="desktop-menu">
                     <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
                     <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
                     <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
@@ -367,18 +481,27 @@
             </nav>
             
             <!-- Selector de tema -->
-            <label class="theme-switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider"></span>
-            </label>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggle" aria-label="Cambiar tema">
+                    <span class="slider"></span>
+                </label>
+            </div>
             
-            <!-- Menú móvil -->
-            <button class="menu-toggle" id="menuToggle" aria-label="Menú">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <!-- Botón menú móvil -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 12h18M3 6h18M3 18h18"></path>
                 </svg>
             </button>
         </div>
+        
+        <!-- Menú móvil (fuera del nav para mejor posicionamiento) -->
+        <ul class="mobile-menu" id="mobileMenu">
+            <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+            <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
+            <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
+        </ul>
     </header>
 
     <main class="container">
@@ -390,11 +513,12 @@
                 <div class="article-image-container">
                     <img src="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png" 
                          alt="Chip Broadcom BCM94360" 
-                         class="article-image">
+                         class="article-image"
+                         loading="lazy">
                 </div>
                 <div class="article-text">
                     <div class="meta">
-                        <span>27 Marzo 2025</span>
+                        <time datetime="2025-03-27">27 Marzo 2025</time>
                         <span>·</span>
                         <span>10 min lectura</span>
                     </div>
@@ -409,7 +533,9 @@
         <!-- Vista de artículo completo -->
         <div id="article-full" class="article-full">
             <button class="back-button">
-                <span>←</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
                 <span>Volver a los artículos</span>
             </button>
             <div id="article-content" class="article-content"></div>
@@ -423,36 +549,57 @@
     <script>
         // Sistema de tema
         const themeToggle = document.getElementById('themeToggle');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const setTheme = (isDark) => {
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.checked = isDark;
+        };
         
         // Cargar preferencia de tema
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeToggle.checked = true;
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            setTheme(true);
         }
         
         // Cambiar tema
         themeToggle.addEventListener('change', (e) => {
-            const theme = e.target.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
+            setTheme(e.target.checked);
         });
 
         // Menú móvil
         const menuToggle = document.getElementById('menuToggle');
-        const mainMenu = document.getElementById('mainMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
         
-        menuToggle.addEventListener('click', () => {
-            mainMenu.classList.toggle('show');
+        const toggleMenu = () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('show');
+            
+            // Animación del icono hamburguesa a X
+            menuToggle.classList.toggle('active');
+        };
+        
+        menuToggle.addEventListener('click', toggleMenu);
+        
+        // Cerrar menú al hacer clic en un enlace (solo móvil)
+        document.querySelectorAll('#mobileMenu .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleMenu();
+                const section = e.target.getAttribute('data-section');
+                filterArticles(section);
+            });
         });
 
         // Cargar artículo Markdown
-        async function loadMarkdownArticle(articleElement) {
+        const loadMarkdownArticle = async (articleElement) => {
             try {
                 const markdownPath = articleElement.getAttribute('data-markdown-path');
                 const response = await fetch(markdownPath);
                 
-                if (!response.ok) throw new Error('Error al cargar el artículo');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const markdownContent = await response.text();
                 
                 // Parsear front matter
@@ -460,7 +607,11 @@
                 const content = markdownContent.split('---')[2].trim();
                 
                 // Extraer metadatos
-                const getMetaValue = (key) => frontMatter.match(new RegExp(`${key}:\\s*(.*)`))[1].trim().replace(/"/g, '');
+                const getMetaValue = (key) => {
+                    const match = frontMatter.match(new RegExp(`${key}:\\s*(.*)`));
+                    return match ? match[1].trim().replace(/"/g, '') : '';
+                };
+                
                 const title = getMetaValue('title');
                 const date = new Date(getMetaValue('date'));
                 const categories = getMetaValue('categories')
@@ -468,12 +619,16 @@
                                   .split(',')
                                   .map(cat => cat.trim());
                 
+                // Calcular tiempo de lectura (200 palabras/minuto)
+                const wordCount = content.split(/\s+/).length;
+                const readingTime = Math.ceil(wordCount / 200);
+                
                 // Renderizar artículo
                 document.getElementById('article-content').innerHTML = `
                     <div class="meta">
                         <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                         <span>·</span>
-                        <span>${Math.ceil(content.split(/\s+/).length / 200)} min lectura</span>
+                        <span>${readingTime} min lectura</span>
                     </div>
                     ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
                     <h2>${title}</h2>
@@ -485,21 +640,23 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error cargando el artículo:", error);
                 document.getElementById('article-content').innerHTML = `
                     <div class="error-message">
                         <p>⚠️ Error al cargar el artículo. Por favor, inténtalo de nuevo.</p>
                         <button class="back-button" onclick="window.location.reload()">
-                            <span>↻</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.5 22v-6h-6M2 11.5a10 10 0 0 1 18-6M22 12.5a10 10 0 0 1-18 6"></path>
+                            </svg>
                             <span>Reintentar</span>
                         </button>
                     </div>
                 `;
             }
-        }
+        };
 
         // Navegación por categorías
-        function filterArticles(category) {
+        const filterArticles = (category) => {
             document.querySelectorAll('.article-preview').forEach(article => {
                 const articleCategory = article.getAttribute('data-category');
                 if (category === 'home' || articleCategory === category) {
@@ -512,13 +669,13 @@
             document.getElementById('article-list').style.display = 'block';
             document.getElementById('article-full').style.display = 'none';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        };
 
         // Eventos
         document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const section = this.getAttribute('data-section');
+                const section = e.target.getAttribute('data-section');
                 filterArticles(section);
             });
         });
@@ -531,17 +688,45 @@
             filterArticles('home');
         });
 
-        // Búsqueda
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('.article-preview').forEach(article => {
-                const text = article.textContent.toLowerCase();
-                article.style.display = text.includes(term) ? 'flex' : 'none';
-            });
+        // Búsqueda optimizada
+        const searchInput = document.getElementById('searchInput');
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const term = searchInput.value.trim().toLowerCase();
+                
+                if (term === '') {
+                    filterArticles('home');
+                    return;
+                }
+                
+                document.querySelectorAll('.article-preview').forEach(article => {
+                    const title = article.querySelector('h2').textContent.toLowerCase();
+                    const description = article.querySelector('p').textContent.toLowerCase();
+                    const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                    
+                    const matches = title.includes(term) || 
+                                  description.includes(term) || 
+                                  tags.some(tag => tag.includes(term));
+                    
+                    article.style.display = matches ? 'flex' : 'none';
+                });
+            }, 300);
         });
 
         // Año actual
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Precarga de recursos
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
     </script>
 </body>
 </html>
