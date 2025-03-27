@@ -62,24 +62,25 @@ Para evitar conflictos con el kext nativo de macOS, bloquea `IOSkywalkFamily`:
 
 2. ✅ **Parche en `config.plist`:**  
    En `Kernel | Block`, agrega este bloque:  
-   ```xml
-   <dict>
-       <key>Arch</key>
-       <string>Any</string>
-       <key>Comment</key>
-       <string>Allow IOSkywalk Downgrade</string>
-       <key>Enabled</key>
-       <true/>
-       <key>Identifier</key>
-       <string>com.apple.iokit.IOSkywalkFamily</string>
-       <key>MaxKernel</key>
-       <string></string>
-       <key>MinKernel</key>
-       <string>23.0.0</string>
-       <key>Strategy</key>
-       <string>Exclude</string>
-   </dict>
 
+```xml
+<dict>
+   <key>Arch</key>
+   <string>Any</string>
+   <key>Comment</key>
+   <string>Allow IOSkywalk Downgrade</string>
+   <key>Enabled</key>
+   <true/>
+   <key>Identifier</key>
+   <string>com.apple.iokit.IOSkywalkFamily</string>
+   <key>MaxKernel</key>
+   <string></string>
+   <key>MinKernel</key>
+   <string>23.0.0</string>
+   <key>Strategy</key>
+   <string>Exclude</string>
+</dict>
+```
 
 ## ⚙️ Configuraciones Adicionales
 
