@@ -1,10 +1,13 @@
 ---
 title: "OpenCore Sin Inyección ACPI - Guía Completa"
-date: 2025-03-27
+date: "2025-03-27"
 description: "Guía sobre cómo usar OpenCore sin inyección ACPI para evitar conflictos con Windows"
-image: "https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/no-acpi.png"
+image: "/assets/img/no-acpi.png"
 category: "guides"
 categories: ["OpenCore", "ACPI", "Hackintosh"]
+tags: ["Guía", "Configuración", "Windows", "SSDT"]
+featured: true
+priority: 1
 ---
 
 # OpenCore Sin Inyección ACPI
