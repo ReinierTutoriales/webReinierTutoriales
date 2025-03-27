@@ -7,15 +7,6 @@ category: "guides"
 categories: ["OpenCore", "ACPI", "Hackintosh"]
 ---
 
----
-title: "OpenCore Sin Inyección ACPI"
-date: 2025-03-27
-categories: [Hackintosh, OpenCore]
-tags: [ACPI, OpenCore, macOS]
-image: /assets/img/opencore-no-acpi.jpg
-description: "Guía completa para configurar OpenCore sin inyección ACPI"
----
-
 # OpenCore Sin Inyección ACPI
 
 ## **Acerca de** ℹ️
