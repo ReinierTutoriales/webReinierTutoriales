@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO Meta Tags -->
-    <title>ReinierTutoriales | Tutoriales de Hackintosh y Tecnología</title>
-    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo. Guías paso a paso con OpenCore, soluciones Broadcom y más.">
-    <meta name="keywords" content="Hackintosh, macOS, Broadcom, OpenCore, WiFi, Bluetooth, tutoriales tecnología">
-    <meta name="author" content="ReinierTutoriales">
-    <!-- OpenGraph / Redes Sociales -->
-    <meta property="og:title" content="ReinierTutoriales | Tutoriales de Hackintosh y Tecnología">
-    <meta property="og:description" content="Aprende con tutoriales técnicos sobre Hackintosh y desarrollo de software.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://reiniertutoriales.github.io/webReinierTutoriales/">
-    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/img/og-preview.jpg">
+    <title>ReinierTutoriales | Tecnología y Desarrollo</title>
+    <meta name="description" content="Tutoriales técnicos sobre Hackintosh, macOS, hardware y desarrollo">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="ReinierTutoriales | Tutoriales de tecnología">
+    <meta property="og:image" content="https://reiniertutoriales.github.io/webReinierTutoriales/assets/img/Broadcom-BCM94360.png">
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Fuentes Google -->
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Marked.js para renderizado Markdown -->
+    <!-- Marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -31,37 +25,31 @@
             --card-bg: #f8fafc;
             --border: #e2e8f0;
             --text-soft: #4b5563;
-            --switch-bg: #e2e8f0;
-            --switch-circle: #ffffff;
         }
 
         [data-theme="dark"] {
             --primary: #3b82f6;
-            --primary-dark: #60a5fa;
             --bg: #0f172a;
             --text: #f8fafc;
             --card-bg: #1e293b;
             --border: #334155;
-            --text-soft: #94a3b8;
-            --switch-bg: #475569;
-            --switch-circle: #e2e8f0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background 0.3s ease, color 0.2s ease, border-color 0.3s ease;
+            transition: background 0.3s ease;
         }
 
         body {
-            background-color: var(--bg);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
             color: var(--text);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            min-height: 100vh;
         }
 
+        /* Header y búsqueda */
         header {
             background: var(--primary);
             color: white;
@@ -69,317 +57,67 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            white-space: nowrap;
-        }
-
-        /* Barra de Búsqueda */
-        .search-container {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-            position: relative;
-            flex-grow: 1;
-            max-width: 300px;
-        }
-
-        .search-input {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            width: 100%;
-            font-family: inherit;
-        }
-
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: white;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .search-button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            position: absolute;
-            right: 10px;
-        }
-
-        /* Resto de tu CSS... (mantén todo el estilo original) */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
             gap: 1.5rem;
         }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 0;
+        .search-container {
+            flex: 1;
+            max-width: 400px;
             position: relative;
         }
 
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: white;
-            transition: width 0.3s;
-        }
-
-        nav ul li a:hover::after {
+        .search-input {
             width: 100%;
-        }
-
-        .theme-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            margin-left: 1rem;
-        }
-
-        .theme-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--switch-bg);
-            border-radius: 34px;
-            transition: .4s;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--switch-circle);
-            border-radius: 50%;
-            transition: .4s;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-dark);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(30px);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-
-        .article-list {
-            display: block;
-        }
-
-        .article-preview {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .article-preview:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-soft);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--primary);
-            color: white;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-right: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
 
-        .article-full {
-            display: none;
+        /* Artículos */
+        .article-preview {
+            display: flex;
+            gap: 1.5rem;
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .article-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
             border: 1px solid var(--border);
         }
 
-        .back-button {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--primary);
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-
-        .back-button:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Estilos para contenido Markdown */
-        .markdown-content {
-            line-height: 1.7;
-        }
-        .markdown-content h3 {
-            font-size: 1.4rem;
-            margin: 1.8rem 0 1rem;
-            color: var(--text);
-        }
         .markdown-content img {
             max-width: 100%;
+            height: auto;
             border-radius: 8px;
-            margin: 1.5rem 0;
-        }
-        .markdown-content pre {
-            background: var(--bg);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-            border: 1px solid var(--border);
-        }
-        .markdown-content code {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-        }
-        .markdown-content blockquote {
-            border-left: 3px solid var(--primary);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            color: var(--text-soft);
-            font-style: italic;
-        }
-
-        footer {
-            background: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            font-size: 0.9rem;
+            margin: 1rem 0;
+            display: block;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
-                flex-wrap: wrap;
-            }
-            .search-container {
-                order: 3;
-                max-width: 100%;
-                margin: 0.5rem 0 0;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: var(--primary-dark);
+            .article-preview {
                 flex-direction: column;
-                padding: 1rem;
-                gap: 0;
             }
-            nav ul.show {
-                display: flex;
-            }
-            nav ul li {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            .container {
-                padding: 0 1rem;
-            }
-            .article-preview, .article-full {
-                padding: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .theme-switch {
-                width: 50px;
-                height: 25px;
-            }
-            .slider:before {
-                width: 18px;
-                height: 18px;
-                transform: translateX(25px);
+            .article-image {
+                width: 100%;
+                height: auto;
             }
         }
     </style>
@@ -388,158 +126,89 @@
     <header>
         <div class="nav-container">
             <div class="logo">ReinierTutoriales</div>
-            
-            <!-- Barra de Búsqueda Mejorada -->
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Buscar tutoriales..." id="searchInput">
-                <button class="search-button" aria-label="Buscar">🔍</button>
+                <input type="text" class="search-input" placeholder="Buscar..." id="searchInput">
             </div>
-            
-            <button class="menu-toggle" aria-label="Menú">☰</button>
             <nav>
                 <ul>
-                    <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
-                    <li><a href="#" class="nav-link" data-section="hardware">Hardware</a></li>
-                    <li><a href="#" class="nav-link" data-section="guides">Guías</a></li>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Hardware</a></li>
+                    <li><a href="#">Guías</a></li>
                 </ul>
             </nav>
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider round"></div>
-                </label>
-            </div>
         </div>
     </header>
 
-    <main class="container" itemscope itemtype="https://schema.org/Blog">
-        <!-- Vista de lista de artículos -->
+    <main class="container">
         <div id="article-list" class="article-list">
-            <article class="article-preview" data-article="broadcom" itemprop="blogPost" itemscope itemtype="https://schema.org/Article">
-                <div class="meta">
-                    <time datetime="2025-03-27" itemprop="datePublished">27 Marzo 2025</time>
-                    <span>·</span>
-                    <span itemprop="timeRequired">10 min lectura</span>
+            <article class="article-preview" 
+                     data-markdown-path="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md">
+                <img src="https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/Broadcom-BCM94360.png" 
+                     alt="Chip Broadcom BCM94360" 
+                     class="article-image">
+                <div class="article-text">
+                    <div class="meta">
+                        <span>27 Marzo 2025</span>
+                        <span>·</span>
+                        <span>10 min lectura</span>
+                    </div>
+                    <span class="tag">macOS</span>
+                    <span class="tag">Hackintosh</span>
+                    <h2>Guía Broadcom WiFi/Bluetooth en macOS 15</h2>
+                    <p>Soporte completo para chips Broadcom en macOS 15 Sequoia</p>
                 </div>
-                <span class="tag">macOS</span>
-                <span class="tag">Hackintosh</span>
-                <h2 itemprop="headline">Guía Completa: Soporte Broadcom WiFi/Bluetooth en macOS 15 Sequoia</h2>
-                <p itemprop="description">Activa WiFi/Bluetooth Broadcom en macOS 15 Sequoia con esta guía paso a paso.</p>
             </article>
         </div>
 
-        <!-- Vista de artículo completo -->
-        <div id="article-full" class="article-full">
-            <button class="back-button">← Volver a los artículos</button>
+        <div id="article-full" class="article-full" style="display: none;">
+            <button class="back-button">← Volver</button>
             <div id="article-content" class="article-content"></div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
+        <p>&copy; <span id="year"></span> ReinierTutoriales</p>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // Tema oscuro/claro
-        const themeSwitch = document.getElementById('checkbox');
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-        if (prefersDarkScheme.matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeSwitch.checked = true;
-        }
-
-        themeSwitch.addEventListener('change', () => {
-            const newTheme = themeSwitch.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-        });
-
-        // Menú mobile
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('nav ul');
-
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('show');
-        });
-
-        // Año actual
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Sistema de navegación
-        const articleList = document.getElementById('article-list');
-        const articleFull = document.getElementById('article-full');
-        const articleContent = document.getElementById('article-content');
-        const backButton = document.querySelector('.back-button');
-        const searchInput = document.getElementById('searchInput');
-
-        // Cargar artículo Markdown
-        async function loadMarkdownArticle() {
+        // Cargar artículo desde GitHub
+        async function loadMarkdownArticle(articleElement) {
             try {
-                const response = await fetch('_posts/2025-03-27-wifi-bluetooth-broadcom-macos-sequoia.md');
-                if (!response.ok) throw new Error('Artículo no encontrado');
+                const markdownUrl = articleElement.getAttribute('data-markdown-path');
+                const response = await fetch(markdownUrl);
                 const markdown = await response.text();
-
-                // Parsear front matter
-                const frontMatter = markdown.match(/---\n([\s\S]*?)\n---/)[1];
-                const content = markdown.split('---')[2].trim();
-
-                const getMetaValue = (meta, key) => meta.match(new RegExp(`${key}:\\s*(.*)`))[1].trim();
-                const title = getMetaValue(frontMatter, 'title').replace(/"/g, '');
-                const date = new Date(getMetaValue(frontMatter, 'date'));
-                const categories = getMetaValue(frontMatter, 'categories')
-                    .replace(/[\[\]]/g, '')
-                    .split(',')
-                    .map(cat => cat.trim());
-
-                // Calcular tiempo de lectura
-                const readingTime = Math.ceil(content.split(/\s+/).length / 200);
-
-                // Renderizar
-                articleContent.innerHTML = `
-                    <div class="meta">
-                        <span>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                        <span>·</span>
-                        <span>${readingTime} min lectura</span>
-                    </div>
-                    ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                
+                const [_, frontMatter, content] = markdown.split('---');
+                const title = frontMatter.match(/title:\s*"(.*?)"/)[1];
+                const date = frontMatter.match(/date:\s*(.*)/)[1];
+                
+                document.getElementById('article-content').innerHTML = `
                     <h2>${title}</h2>
+                    <div class="meta">
+                        <span>${new Date(date).toLocaleDateString('es-ES')}</span>
+                    </div>
                     <div class="markdown-content">${marked.parse(content)}</div>
                 `;
-
-                articleList.style.display = 'none';
-                articleFull.style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
+                
+                document.getElementById('article-list').style.display = 'none';
+                document.getElementById('article-full').style.display = 'block';
             } catch (error) {
-                console.error('Error:', error);
-                articleContent.innerHTML = `
-                    <div class="error" style="color: var(--primary); text-align: center; padding: 2rem;">
-                        <p>⚠️ Error al cargar el artículo</p>
-                        <button class="back-button" onclick="window.location.reload()">Reintentar</button>
-                    </div>
-                `;
+                console.error("Error:", error);
             }
         }
 
         // Eventos
-        document.querySelector('.article-preview').addEventListener('click', loadMarkdownArticle);
-        backButton.addEventListener('click', () => {
-            articleList.style.display = 'block';
-            articleFull.style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelector('.article-preview').addEventListener('click', function() {
+            loadMarkdownArticle(this);
         });
 
-        // Búsqueda
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('.article-preview').forEach(article => {
-                const title = article.querySelector('h2').textContent.toLowerCase();
-                const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
-                const matches = title.includes(term) || tags.some(tag => tag.includes(term));
-                article.style.display = matches ? 'block' : 'none';
-            });
+        document.querySelector('.back-button').addEventListener('click', function() {
+            document.getElementById('article-list').style.display = 'block';
+            document.getElementById('article-full').style.display = 'none';
         });
+
+        // Año actual
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
