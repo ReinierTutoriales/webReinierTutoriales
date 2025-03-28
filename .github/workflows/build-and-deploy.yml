@@ -2,6 +2,10 @@ name: Generar y Desplegar Contenido
 
 on: [push]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write  # Permite escribir en el repositorio
   pages: write     # Permite actualizar GitHub Pages
@@ -44,3 +48,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           force_orphan: true
+          keep_files: false
