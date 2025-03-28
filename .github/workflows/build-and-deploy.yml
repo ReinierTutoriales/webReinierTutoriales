@@ -1,63 +1,25 @@
-name: Generar y Desplegar Contenido
+name: Actualizar API Cache
 
-on: [push]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: write
-  pages: write
-  pull-requests: write
+on:
+  schedule:
+    - cron: '0 * * * *'  # Ejecuta cada hora
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  update-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
-
-      - name: Verificar existencia de secreto
-        id: check-secret
-        run: |
-          if [ -z "${{ secrets.MI_TOKEN }}" ]; then
-            echo "::error::El secreto MI_TOKEN no está configurado"
-            exit 1
-          else
-            echo "Secreto detectado (valor oculto por seguridad)"
-          fi
-
-      - name: Instalar dependencias
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-
-      - name: Obtener artículos de la API de GitHub
-        if: steps.check-secret.outcome == 'success'
-        run: |
-          # Cambia _posts por articles si esa es tu carpeta real
-          curl -H "Authorization: token ${{ secrets.MI_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/articles > posts.json
-          
-          # Filtra solo archivos .md y genera el articles.json
-          jq '[.[] | select(.name | endswith(".md")) | {name: .name, download_url: .download_url}]' posts.json > articles.json
-          
-          # Verifica el contenido generado
-          cat articles.json
-
-      - name: Listar archivos generados
-        run: |
-          ls -la
-          echo "Contenido de articles.json:"
-          cat articles.json
-
-      - name: Desplegar en GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: actions/checkout@v3
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages  # Asegúrate de usar esta rama
-          force_orphan: true
-          keep_files: false
+          node-version: '16'
+      - name: Ejecutar script para actualizar API
+        run: node scripts/update-api.js
+      - name: Hacer commit de los cambios
+        run: |
+          git config --global user.email "tu-email@example.com"
+          git config --global user.name "TuNombre"
+          git add data/api.json
+          git commit -m "Actualización automática de API"
+          git push
