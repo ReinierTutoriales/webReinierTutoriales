@@ -42,6 +42,7 @@
             --code-border: #e5e7eb;
             --new-badge: #ef4444;
             --error-color: #dc2626;
+            --x-color: #000000; /* Color para X */
         }
 
         [data-theme="dark"] {
@@ -58,6 +59,7 @@
             --code-border: #334155;
             --new-badge: #dc2626;
             --error-color: #ef4444;
+            --x-color: #ffffff; /* Color para X en modo oscuro */
         }
 
         * {
@@ -304,7 +306,8 @@
         }
 
         .article-image-container {
-            flex: 0 0 200px;
+            flex: 0 0 auto;
+            width: 200px;
             height: 150px;
             border-radius: 8px;
             overflow: hidden;
@@ -375,8 +378,10 @@
         /* Imagen destacada */
         .featured-image {
             width: 100%;
+            max-width: 100%;
+            height: auto;
             max-height: 400px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 12px;
             margin: 0 auto 2rem;
             display: block;
@@ -416,6 +421,7 @@
             opacity: 0.9;
         }
 
+        .share-button.x { background-color: var(--x-color); }
         .share-button.twitter { background-color: #1DA1F2; }
         .share-button.facebook { background-color: #4267B2; }
         .share-button.linkedin { background-color: #0077B5; }
@@ -506,11 +512,13 @@
         }
 
         .markdown-content img {
+            width: 100%;
             max-width: 100%;
             height: auto;
             border-radius: 8px;
             margin: 1.5rem 0;
             border: 1px solid var(--border);
+            object-fit: contain;
         }
 
         /* Footer */
@@ -627,6 +635,12 @@
                 max-height: 200px;
             }
 
+            .article-image {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+
             .featured-image {
                 max-height: 250px;
             }
@@ -714,14 +728,12 @@
     </div>
 
     <footer>
-        <p>&copy; <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
+        <p>© <span id="year"></span> ReinierTutoriales. Todos los derechos reservados.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // Configuración del blog
         const BLOG_CONFIG = {
-            postsUrl: 'https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts',
             assetsUrl: 'https://raw.githubusercontent.com/ReinierTutoriales/webReinierTutoriales/main/assets/img/',
             defaultImage: 'default-article-image.jpg',
             cacheExpiration: 60 * 60 * 1000, // 1 hora
@@ -730,14 +742,12 @@
             retryDelay: 1000
         };
 
-        // Estado de la aplicación
         const APP_STATE = {
             currentArticle: null,
             articles: [],
             retryCount: 0
         };
 
-        // Sistema de tema
         function initTheme() {
             const themeToggle = document.getElementById('themeToggle');
             const setTheme = (isDark) => {
@@ -748,15 +758,11 @@
             
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
             setTheme(savedTheme === 'dark' || (!savedTheme && prefersDark));
             
-            themeToggle.addEventListener('change', (e) => {
-                setTheme(e.target.checked);
-            });
+            themeToggle.addEventListener('change', (e) => setTheme(e.target.checked));
         }
 
-        // Menú móvil
         function initMobileMenu() {
             const menuToggle = document.getElementById('menuToggle');
             const mobileMenu = document.getElementById('mobileMenu');
@@ -778,7 +784,6 @@
             });
         }
 
-        // Funciones de utilidad
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('es-ES', options);
@@ -794,11 +799,9 @@
             return diffDays <= BLOG_CONFIG.newArticleThreshold;
         }
 
-        // Manejo de errores
         function showError(elementId, error) {
             const element = document.getElementById(elementId);
             if (!element) return;
-            
             element.innerHTML = `
                 <div class="error-message">
                     <h3>😕 Error al cargar contenido</h3>
@@ -813,30 +816,20 @@
         function showNotification(message, duration = 5000) {
             const notification = document.getElementById('notification');
             const notificationMessage = document.getElementById('notification-message');
-            
             notificationMessage.textContent = message;
             notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, duration);
-            
+            setTimeout(() => notification.classList.remove('show'), duration);
             document.querySelector('.notification-close').addEventListener('click', () => {
                 notification.classList.remove('show');
             });
         }
 
-        // Cache
         function saveToCache(key, data) {
             try {
-                const cacheData = {
-                    timestamp: Date.now(),
-                    data: data
-                };
+                const cacheData = { timestamp: Date.now(), data };
                 localStorage.setItem(key, JSON.stringify(cacheData));
             } catch (e) {
                 console.warn('Error al guardar en caché:', e);
-                localStorage.removeItem(key);
             }
         }
 
@@ -844,10 +837,8 @@
             try {
                 const cachedData = localStorage.getItem(key);
                 if (!cachedData) return null;
-                
                 const parsedData = JSON.parse(cachedData);
                 const isExpired = Date.now() - parsedData.timestamp > BLOG_CONFIG.cacheExpiration;
-                
                 return isExpired ? null : parsedData.data;
             } catch (e) {
                 console.warn('Error al leer caché:', e);
@@ -855,19 +846,15 @@
             }
         }
 
-        // Manejo de artículos
         async function parseArticleMetadata(markdownUrl) {
             try {
                 const response = await fetchWithRetry(markdownUrl);
                 if (!response.ok) throw new Error('Error al cargar artículo');
-                
                 const markdownContent = await response.text();
                 const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/);
-                
                 if (!frontMatter) throw new Error('No se encontró front matter');
                 
                 const content = markdownContent.split('---')[2].trim();
-                
                 const getMetaValue = (key) => {
                     const match = frontMatter[1].match(new RegExp(`${key}:\\s*(.*)`));
                     return match ? match[1].trim().replace(/"/g, '') : '';
@@ -891,9 +878,10 @@
         }
 
         async function loadArticleList(forceRefresh = false) {
+            const articleList = document.getElementById('article-list');
+            articleList.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+
             try {
-                const articleList = document.getElementById('article-list');
-                
                 if (!forceRefresh) {
                     const cachedArticles = getFromCache('articles');
                     if (cachedArticles) {
@@ -902,21 +890,16 @@
                         return;
                     }
                 }
-                
-                articleList.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
-                
-                const headers = {};
-                if (BLOG_CONFIG.githubToken) {
-                    headers['Authorization'] = `token ${BLOG_CONFIG.githubToken}`;
-                }
-                
-                const response = await fetchWithRetry(BLOG_CONFIG.postsUrl, { headers });
-                if (!response.ok) throw new Error(`Error ${response.status} al cargar artículos`);
-                
+
+                const response = await fetchWithRetry('/articles.json');
+                if (!response.ok) throw new Error(`Error al cargar articles.json: ${response.status}`);
                 const files = await response.json();
-                const markdownFiles = files.filter(file => file.name.endsWith('.md'));
-                
-                const articles = await Promise.all(markdownFiles.map(async file => {
+
+                if (!files || files.length === 0) {
+                    throw new Error('No se encontraron artículos en articles.json');
+                }
+
+                const articles = await Promise.all(files.map(async file => {
                     try {
                         const metadata = await parseArticleMetadata(file.download_url);
                         return {
@@ -929,21 +912,18 @@
                         console.error(`Error procesando artículo ${file.name}:`, error);
                         return null;
                     }
-                });
-                
+                }));
+
                 const validArticles = articles.filter(article => article !== null);
                 validArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
+
                 APP_STATE.articles = validArticles;
                 saveToCache('articles', validArticles);
                 renderArticles(validArticles);
-                
                 checkNewArticlesSinceLastVisit(validArticles);
-                APP_STATE.retryCount = 0;
-                
+
             } catch (error) {
                 console.error('Error loading articles:', error);
-                
                 if (APP_STATE.retryCount < BLOG_CONFIG.maxRetries) {
                     APP_STATE.retryCount++;
                     setTimeout(() => loadArticleList(forceRefresh), BLOG_CONFIG.retryDelay);
@@ -955,7 +935,6 @@
 
         function renderArticles(articles) {
             const articleList = document.getElementById('article-list');
-            
             if (!articles || articles.length === 0) {
                 articleList.innerHTML = `
                     <div class="error-message">
@@ -967,7 +946,6 @@
             }
             
             articleList.innerHTML = '';
-            
             articles.forEach(article => {
                 const imageUrl = article.image 
                     ? (article.image.startsWith('http') ? article.image : BLOG_CONFIG.assetsUrl + article.image)
@@ -1007,11 +985,7 @@
             try {
                 const markdownPath = articleElement.getAttribute('data-markdown-path');
                 const imageUrl = articleElement.getAttribute('data-image-url');
-                
-                APP_STATE.currentArticle = {
-                    path: markdownPath,
-                    imageUrl: imageUrl
-                };
+                APP_STATE.currentArticle = { path: markdownPath, imageUrl };
                 
                 const cachedArticle = getFromCache(`article-${markdownPath}`);
                 if (cachedArticle) {
@@ -1026,7 +1000,6 @@
                 
                 const markdownContent = await response.text();
                 const frontMatter = markdownContent.match(/---\n([\s\S]*?)\n---/);
-                
                 if (!frontMatter) throw new Error('Formato de artículo inválido');
                 
                 const content = markdownContent.split('---')[2].trim();
@@ -1082,10 +1055,13 @@
                 </div>
                 ${articleData.categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
                 <h1>${articleData.title}</h1>
-                
                 <img src="${imageUrl}" alt="${articleData.title}" class="featured-image">
-                
                 <div class="share-buttons">
+                    <a href="https://x.com/intent/tweet?url=${articleData.currentUrl}&text=${articleData.shareTitle}" 
+                       class="share-button x" target="_blank" rel="noopener">
+                        <i class="fab fa-x-twitter"></i>
+                        <span class="text">X</span>
+                    </a>
                     <a href="https://twitter.com/intent/tweet?url=${articleData.currentUrl}&text=${articleData.shareTitle}" 
                        class="share-button twitter" target="_blank" rel="noopener">
                         <i class="fab fa-twitter"></i>
@@ -1112,7 +1088,6 @@
                         <span class="text">Telegram</span>
                     </a>
                 </div>
-                
                 <div class="markdown-content">${articleData.processedContent}</div>
             `;
             
@@ -1121,7 +1096,6 @@
             document.getElementById('article-full').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            // Actualizar URL sin recargar
             const articleId = APP_STATE.currentArticle.path.split('/').pop().replace('.md', '');
             history.pushState({ article: articleId }, '', `?article=${articleId}`);
         }
@@ -1129,7 +1103,6 @@
         function addCopyButtons() {
             document.querySelectorAll('.code-block-wrapper').forEach(wrapper => {
                 if (wrapper.querySelector('.copy-button')) return;
-                
                 const codeBlock = wrapper.querySelector('pre');
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-button';
@@ -1157,41 +1130,33 @@
             });
         }
 
-        // Navegación
         function filterArticles(category) {
             document.querySelectorAll('.article-preview').forEach(article => {
                 article.style.display = (category === 'home' || article.getAttribute('data-category') === category) 
                     ? 'flex' 
                     : 'none';
             });
-            
             document.getElementById('article-list').style.display = 'block';
             document.getElementById('article-full').style.display = 'none';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Limpiar estado de URL
             history.pushState({}, '', window.location.pathname);
         }
 
         function initSearch() {
             const searchInput = document.getElementById('searchInput');
             let searchTimeout;
-            
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     const term = searchInput.value.trim().toLowerCase();
-                    
                     if (!term) {
                         filterArticles('home');
                         return;
                     }
-                    
                     document.querySelectorAll('.article-preview').forEach(article => {
                         const title = article.querySelector('h2').textContent.toLowerCase();
                         const description = article.querySelector('p').textContent.toLowerCase();
                         const tags = Array.from(article.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
-                        
                         const matches = title.includes(term) || description.includes(term) || tags.some(tag => tag.includes(term));
                         article.style.display = matches ? 'flex' : 'none';
                     });
@@ -1205,16 +1170,13 @@
                 localStorage.setItem('lastVisit', new Date().toISOString());
                 return;
             }
-            
             const newArticles = articles.filter(article => new Date(article.date) > new Date(lastVisit));
             if (newArticles.length > 0) {
                 showNotification(`¡Hay ${newArticles.length} artículo(s) nuevo(s) desde tu última visita!`);
             }
-            
             localStorage.setItem('lastVisit', new Date().toISOString());
         }
 
-        // Función con reintentos
         async function fetchWithRetry(url, options = {}, retries = BLOG_CONFIG.maxRetries) {
             try {
                 const response = await fetch(url, options);
@@ -1229,7 +1191,6 @@
             }
         }
 
-        // Inicialización
         function init() {
             initTheme();
             initMobileMenu();
@@ -1241,23 +1202,14 @@
                 });
             });
 
-            document.querySelector('.back-button').addEventListener('click', () => {
-                filterArticles('home');
-            });
-
+            document.querySelector('.back-button').addEventListener('click', () => filterArticles('home'));
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // Manejar el botón de retroceso
-            window.addEventListener('popstate', () => {
-                filterArticles('home');
-            });
+            window.addEventListener('popstate', () => filterArticles('home'));
             
-            // Verificar si hay un artículo en la URL
             const urlParams = new URLSearchParams(window.location.search);
             const articleParam = urlParams.get('article');
-            
             if (articleParam) {
-                // Intentar cargar el artículo directamente
                 const article = APP_STATE.articles.find(a => a.name.replace('.md', '') === articleParam);
                 if (article) {
                     const articleElement = document.createElement('div');
@@ -1272,18 +1224,8 @@
             } else {
                 loadArticleList();
             }
-            
-            // Precarga de recursos
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js').catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-                });
-            }
         }
 
-        // Iniciar la aplicación
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
