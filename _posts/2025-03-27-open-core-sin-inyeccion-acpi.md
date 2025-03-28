@@ -8,7 +8,6 @@ categories: ["OpenCore", "ACPI", "Hackintosh"]
 ---
 
 # OpenCore Sin Inyección ACPI
-
 ## **Acerca de** ℹ️
 **OpenCore Sin Inyección ACPI** es una bifurcación *no oficial* de OpenCore, creada por [**btwise**](https://gitee.com/btwise/OpenCore_NO_ACPI), sin respaldo de Acidanthera (equipo oficial de OpenCore) ni de mí. Este documento solo ofrece información útil. Su diferencia principal es que **evita la inyección de ACPI** (parches, tablas y parámetros de arranque) en sistemas operativos distintos a macOS.
 
