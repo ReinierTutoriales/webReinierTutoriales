@@ -1,5 +1,3 @@
-- name: Listar archivos generados
-  run: ls -la
 name: Generar y Desplegar Contenido
 
 on: [push]
@@ -11,6 +9,7 @@ concurrency:
 permissions:
   contents: write
   pages: write
+  pull-requests: write
 
 jobs:
   build-and-deploy:
@@ -37,18 +36,28 @@ jobs:
       - name: Obtener artículos de la API de GitHub
         if: steps.check-secret.outcome == 'success'
         run: |
+          # Cambia _posts por articles si esa es tu carpeta real
           curl -H "Authorization: token ${{ secrets.MI_TOKEN }}" \
                -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts > posts.json
+               https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/articles > posts.json
+          
+          # Filtra solo archivos .md y genera el articles.json
           jq '[.[] | select(.name | endswith(".md")) | {name: .name, download_url: .download_url}]' posts.json > articles.json
+          
+          # Verifica el contenido generado
+          cat articles.json
 
       - name: Listar archivos generados
-        run: ls -la
+        run: |
+          ls -la
+          echo "Contenido de articles.json:"
+          cat articles.json
 
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
+          publish_branch: gh-pages  # Asegúrate de usar esta rama
           force_orphan: true
           keep_files: false
