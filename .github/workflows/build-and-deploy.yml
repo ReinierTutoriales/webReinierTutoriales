@@ -1,3 +1,5 @@
+- name: Listar archivos generados
+  run: ls -la
 name: Generar y Desplegar Contenido
 
 on: [push]
@@ -7,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write  # Permite escribir en el repositorio
-  pages: write     # Permite actualizar GitHub Pages
+  contents: write
+  pages: write
 
 jobs:
   build-and-deploy:
@@ -39,8 +41,9 @@ jobs:
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/repos/ReinierTutoriales/webReinierTutoriales/contents/_posts > posts.json
           jq '[.[] | select(.name | endswith(".md")) | {name: .name, download_url: .download_url}]' posts.json > articles.json
-        env:
-          GITHUB_TOKEN: ${{ secrets.MI_TOKEN }}
+
+      - name: Listar archivos generados
+        run: ls -la
 
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
