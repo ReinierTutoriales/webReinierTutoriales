@@ -1,6 +1,6 @@
 # _config.yml
 title: ReinierTutoriales
-baseurl: "/webReinierTutoriales"  # Nombre de tu repositorio
+baseurl: "/webReinierTutoriales"  # webReinierTutoriales
 url: "https://reiniertutoriales.github.io"
 theme: minima
 permalink: /:categories/:title/
