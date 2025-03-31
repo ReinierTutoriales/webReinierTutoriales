@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "titulo": "Guía Definitiva de macOS Sonoma",
+        "categoria": "macos",
+        "fecha": "15 Marzo 2024",
+        "imagen": "assets/macos-guide.jpg",
+        "descripcion": "Instalación paso a paso y optimización avanzada...",
+        "url": "#"
+    },
+    {
+        "id": 2,
+        "titulo": "Windows 11: Instalación Limpia",
+        "categoria": "windows",
+        "fecha": "12 Marzo 2024",
+        "imagen": "assets/windows-install.jpg",
+        "descripcion": "Creación de medio booteable y configuración...",
+        "url": "#"
+    }
+]
