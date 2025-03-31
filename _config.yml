@@ -1,9 +1,0 @@
-# _config.yml
-title: ReinierTutoriales
-baseurl: "/webReinierTutoriales"  # webReinierTutoriales
-url: "https://reiniertutoriales.github.io"
-theme: minima
-permalink: /:categories/:title/
-collections:
-  posts:
-    output: true
