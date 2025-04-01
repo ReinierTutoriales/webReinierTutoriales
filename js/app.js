@@ -1,55 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const contenido = document.getElementById('contenido-articulos');
-    
-    // Cargar artículos
-    fetch('./data/articulos.json')
-        .then(response => response.json())
-        .then(articulos => {
-            renderArticulos(articulos);
-            setupFiltros(articulos);
-        });
+// Tema Oscuro/Claro
+const themeToggle = document.getElementById('themeToggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
 
-    // Menú hamburguesa
-    document.getElementById('hamburger').addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.toggle('active');
-    });
+document.documentElement.setAttribute('data-theme', currentTheme);
 
-    // Filtrado de artículos
-    function setupFiltros(articulos) {
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const categoria = link.getAttribute('href').substring(1);
-                
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                
-                const filtrados = categoria === 'inicio' 
-                    ? articulos 
-                    : articulos.filter(a => a.categoria === categoria);
-                
-                renderArticulos(filtrados);
-            });
-        });
+themeToggle.addEventListener('click', () => {
+    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+});
+
+// Menú Hamburguesa
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+});
+
+// Cerrar menú al hacer click fuera
+document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('active');
     }
+});
 
-    function renderArticulos(articulos) {
-        contenido.innerHTML = articulos.map(articulo => `
-            <article class="articulo-card">
-                <img src="${articulo.imagen}" class="articulo-imagen" alt="${articulo.titulo}">
-                <div class="articulo-content">
-                    <span class="articulo-categoria ${articulo.categoria}">
-                        ${articulo.categoria.toUpperCase()}
-                    </span>
-                    <h3 class="articulo-titulo">${articulo.titulo}</h3>
-                    <p class="articulo-descripcion">${articulo.descripcion}</p>
-                    <div class="articulo-meta">
-                        <span class="fecha">📅 ${articulo.fecha}</span>
-                        <a href="${articulo.url}" class="btn-leer">Leer más →</a>
-                    </div>
-                </div>
-            </article>
-        `).join('');
+// Cambiar tema inicial
+themeToggle.innerHTML = currentTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+
+// Detectar cambio de tamaño de pantalla
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        navLinks.classList.remove('active');
     }
 });
