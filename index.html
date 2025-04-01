@@ -1,27 +1,28 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutoriales de Sistemas Operativos</title>
-    <link rel="stylesheet" href="css/styles.css?v=3.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Metadatos existentes -->
+    <link rel="stylesheet" href="css/styles.css?v=4.0">
 </head>
 <body>
-    <!-- Navbar profesional -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
                 <i class="fas fa-laptop-code"></i>
-                <span>SO Tutoriales</span>
+                SO Tutoriales
             </a>
             
             <div class="nav-links" id="navLinks">
                 <a href="#inicio" class="active">Inicio</a>
-                <a href="#macos">ISOS macOS</a>
-                <a href="#windows">ISOS Windows</a>
-                <a href="acerca.html">Acerca de</a>
+                <a href="#macos">macOS</a>
+                <a href="#windows">Windows</a>
+                <a href="acerca.html">Acerca</a>
+            </div>
+            
+            <div class="theme-switcher" id="themeSwitcher">
+                <button id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </button>
             </div>
             
             <button class="hamburger" id="hamburger">
@@ -30,14 +31,8 @@
         </div>
     </nav>
 
-    <!-- Contenido principal -->
-    <main class="blog-container">
-        <section id="inicio" class="seccion-activa">
-            <h2 class="seccion-titulo">Últimos Artículos</h2>
-            <div class="articulos-grid" id="contenido-articulos"></div>
-        </section>
-    </main>
+    <!-- Resto del contenido -->
 
-    <script src="js/app.js?v=3.0"></script>
+    <script src="js/app.js?v=4.0"></script>
 </body>
 </html>
